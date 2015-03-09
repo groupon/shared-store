@@ -44,6 +44,7 @@ debug = require('debug') 'shared-store:cache'
 {fromPromiseFunction} = require './promise'
 dirContent = require './dir-content'
 latestFile = require './latest-file'
+crashRecovery = require './crash-recovery'
 
 writeFile = promisify fs.writeFile
 readFile = promisify fs.readFile
@@ -53,7 +54,7 @@ mkdirpStream = Observable.fromNodeCallback mkdirp
 isCacheFile = ({filename}) ->
   /[\d-]+T[\d]+Z\.json/.test filename
 
-timestampName = ->
+@timestampName = timestampName = ->
   date = new Date().toISOString().replace(/[:.]/g, '')
   "#{date}.json"
 
@@ -109,7 +110,9 @@ activeLoader = (meta, loader, tmpDir, onError) ->
     .flatMapLatest(loader)
     .tapOnError(onError)
 
-  data = rawData.publish()
+  insurance = crashRecovery tmpDir
+
+  data = rawData.tap(insurance.onDataLoaded).publish()
   fromCache = tryCache tmpDir
 
   data.connect()
