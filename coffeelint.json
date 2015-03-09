@@ -112,11 +112,5 @@
   },
   "transform_messes_up_line_numbers": {
     "level": "ignore"
-  },
-  "use_strict": {
-    "module": "coffeelint-use-strict",
-    "level": "error",
-    "allowGlobal": true,
-    "requireGlobal": true
   }
 }
