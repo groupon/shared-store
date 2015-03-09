@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+'use strict';
+
+var Bluebird = require('bluebird');
+
+var SharedStore = require('../');
+var httpResource = require('../lib/http');
+
+function fetchData(headers) {
+  return Bluebird.delay({
+    url: 'http://my-url',
+    response: {
+      headers: {
+        'last-modified': new Date().toString(),
+        'etag': 'some-etag'
+      }
+    },
+    body: { incoming: headers, crashing: false }
+  }, 1000); // delay to ensure temp reads are faster
+}
+
+var options = {
+  temp: process.argv[2],
+  active: true,
+  loader: function(baseConfig) {
+    return httpResource({ fetch: fetchData });
+  }
+};
+
+new SharedStore(options).init({})
+  .done(function(config) {
+    if (config.crashing) {
+      throw new Error('Expected crash')
+    } else {
+      console.log('ok');
+      process.exit(0);
+    }
+  });
