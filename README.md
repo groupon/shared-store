@@ -43,7 +43,7 @@ var store = new SharedStore({
 
 // Load the initial configuration
 store.init((error, config) => {
-  if (error) throw err;
+  if (error) throw error;
 
   // The `config` variable was passed into the callback for convenience
   // purposes only.  If you want the latest data at any point, you can call:
