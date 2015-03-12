@@ -34,7 +34,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Promise = require 'bluebird'
 debug = require('debug') 'shared-store:http'
-{Observable} = require 'rx'
 {partial} = require 'lodash'
 
 {fromPromiseFunction} = require './promise'
