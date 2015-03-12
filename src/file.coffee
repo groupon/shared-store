@@ -35,7 +35,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 fs = require 'fs'
 path = require 'path'
 
-{Observable} = require 'rx'
 {promisify} = Promise = require 'bluebird'
 {partial, identity} = require 'lodash'
 CSON = require 'cson-parser'
