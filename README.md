@@ -34,15 +34,15 @@ var fileContent = require('shared-store/file');
 var store = new SharedStore({
   temp: 'tmp/config',
 
-  loader() {
-    return fileContent('conf/application.json', {
+  loader(options) {
+    return fileContent(options.filename, {
       watch: true
     });
   }
 });
 
 // Load the initial configuration
-store.init((error, config) => {
+store.init({ filename: 'conf/application.json' }, (error, config) => {
   if (error) throw error;
 
   // The `config` variable was passed into the callback for convenience
