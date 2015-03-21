@@ -58,7 +58,8 @@ class SharedStore extends EventEmitter
       meta, loader, temp, active, @emit.bind(this, 'error')
     )
 
-    @_subscription = @stream.subscribe @_handleUpdate
+    @_receivedData = false
+    @_subscription = @stream.subscribe @_handleUpdate, @_handleError
 
     @_cache = null
 
@@ -74,16 +75,20 @@ class SharedStore extends EventEmitter
       options = {}
 
     result = new Promise (resolve, reject) =>
-      @once 'error', reject
       @stream.take(1)
         .map property 'data'
-        .subscribe resolve
+        .subscribe resolve, reject
 
     @emit 'meta', options
 
     result.nodeify callback
 
+  _handleError: (err) =>
+    return unless @_receivedData # pass err to init callback
+    @emit 'error', err
+
   _handleUpdate: ({ data, time, source }) =>
+    @_receivedData = true
     @_cache = freeze {data, time, source}
 
     @emit 'changed', {
