@@ -1,3 +1,7 @@
+1.0.6
+-----
+* fix multiple error events for single onError value - @chkhoo #11
+
 1.0.5
 -----
 * fix first error to store.init callback - @chkhoo #9
