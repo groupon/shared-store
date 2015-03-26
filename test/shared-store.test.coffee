@@ -115,6 +115,6 @@ describe 'SharedStore', ->
         assert.deepEqual {}, data
         assert.equal null, err
 
-      store.once 'error', (err) ->
+      store.on 'error', (err) ->
         assert.equal '¡Ay, caramba!', err.message
         done()

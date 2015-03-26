@@ -105,10 +105,8 @@ tryCache = (tmpDir) ->
       else
         Observable.throw error
 
-activeLoader = (meta, loader, tmpDir, onError) ->
-  rawData = meta
-    .flatMapLatest(loader)
-    .tapOnError(onError)
+activeLoader = (meta, loader, tmpDir) ->
+  rawData = meta.flatMapLatest(loader)
 
   insurance = crashRecovery tmpDir
 
@@ -128,14 +126,14 @@ activeLoader = (meta, loader, tmpDir, onError) ->
 
   return cachedData
 
-passiveLoader = (tmpDir, onError) ->
+passiveLoader = (tmpDir) ->
   rawData = latestCacheFile(tmpDir, true)
 
-  data = rawData.tapOnError(onError).publish()
+  data = rawData.publish()
   data.connect()
   return data
 
-@cachedLoader = (meta, loader, tmpDir, active, onError) ->
+@cachedLoader = (meta, loader, tmpDir, active) ->
   debug 'cachedLoader(%j)', active
-  if active then activeLoader(meta, loader, tmpDir, onError)
-  else passiveLoader(tmpDir, onError)
+  if active then activeLoader(meta, loader, tmpDir)
+  else passiveLoader(tmpDir)
