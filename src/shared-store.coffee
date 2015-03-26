@@ -59,7 +59,7 @@ class SharedStore extends EventEmitter
     )
 
     @_receivedData = false
-    @_subscription = @stream.subscribe @_handleUpdate, @_handleError
+    @stream.subscribe @_handleUpdate, @_handleError
 
     @_cache = null
 
