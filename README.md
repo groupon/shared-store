@@ -82,6 +82,9 @@ Creates a new store, based on the given `loader`.
 Sets the options that will be passed into the loader.
 The promise will be resolved with the initial data.
 
+Note that cached data could be returned in the callback/promise if it already
+exists.
+
 `SharedStore` does not interpret `options` in any way,
 it is just forwarded to the loader.
 

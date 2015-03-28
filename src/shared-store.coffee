@@ -75,6 +75,9 @@ class SharedStore extends EventEmitter
       options = {}
 
     result = new Promise (resolve, reject) =>
+      current = @getCurrent()
+      return resolve(current) if current?
+
       @stream.take(1)
         .map property 'data'
         .subscribe resolve, reject
