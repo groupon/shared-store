@@ -1,3 +1,7 @@
+1.0.7
+-----
+* fix fetching data from cache with init - @chkhoo #12
+
 1.0.6
 -----
 * fix multiple error events for single onError value - @chkhoo #11
