@@ -54,9 +54,7 @@ class SharedStore extends EventEmitter
     meta = Observable.create (observer) =>
       @on 'meta', (value) -> observer.onNext value
 
-    @stream = cachedLoader(
-      meta, loader, temp, active, @emit.bind(this, 'error')
-    )
+    @stream = cachedLoader meta, loader, temp, active
 
     @_receivedData = false
     @stream.subscribe @_handleUpdate, @_handleError
