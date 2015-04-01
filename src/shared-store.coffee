@@ -86,7 +86,7 @@ class SharedStore extends EventEmitter
 
   _handleError: (err) =>
     return unless @_receivedData # pass err to init callback
-    @emit 'error', err
+    @emit 'err', err
 
   _handleUpdate: ({ data, time, source }) =>
     @_receivedData = true
