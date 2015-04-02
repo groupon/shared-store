@@ -1,63 +1,71 @@
 'use strict'
 
 assert = require 'assertive'
+Promise = require 'bluebird'
 {Observable} = require 'rx'
 tmp = require 'tmp'
 
 SharedStore = require '../../'
 fileContent = require '../../file'
 
-describe 'SharedStore (caching functionality)', ->
-  before (done) ->
-    tmp.dir { unsafeCleanup: true }, (err, @tmpDir) => done(err)
+tmpDir = Promise.promisify tmp.dir, tmp
 
-  describe 'with data already in cache', ->
-    beforeEach (done) ->
-      tmp.dir { unsafeCleanup: true }, (err, @cacheTmpDir) =>
-        store = new SharedStore
-          temp: @cacheTmpDir
-          loader: Observable.just {data: 'some data'}
-        store.init (err) ->
-          assert.equal null, err
-          done()
+describe 'SharedStore (with data already in cache)', ->
+  cacheTmpDir = null
 
-    it 'will return cached data in init callback if it already exists', (done) ->
+  beforeEach ->
+    tmpDir(unsafeCleanup: true).then (args) ->
+      cacheTmpDir = args[0]
       store = new SharedStore
-        temp: @cacheTmpDir
+        temp: cacheTmpDir
+        loader: Observable.just {data: 'some data'}
+      store.init()
+
+  describe 'taking a long time to load data', ->
+    notSoCurrent = store = null
+
+    beforeEach ->
+      store = new SharedStore
+        temp: cacheTmpDir
         loader: Observable
           .just {data: 'other data'}
           .delay 500
+      store.init().then (current) ->
+        notSoCurrent = current
 
-      setTimeout ->
-        store.init (err, current) ->
-          assert.equal null, err
-          assert.equal 'some data', current
-          done()
-      , 1000
+    beforeEach ->
+      Promise.delay 1000
 
-    it 'will keep on streaming after an error is thrown', (done) ->
-      @timeout 5000
+    it 'should return cached data immediately in callback', ->
+      assert.equal 'some data', notSoCurrent
+
+    it 'should return latest data in getCurrent', ->
+      assert.equal 'other data', store.getCurrent()
+
+  describe 'throwing a load error & then producing a value', ->
+    store = thrownError = null
+
+    beforeEach ->
       thrownError = false
-      store = new SharedStore
-        temp: @cacheTmpDir
-        loader: Observable.create (observer) ->
-          setTimeout ->
+      loader = ->
+        Observable.create (observer) ->
+          Promise.delay(250).then ->
             unless thrownError
               observer.onError new Error 'kaboom!'
               thrownError = true
               return
-
             observer.onNext data: '2nd value'
-          , 250
 
-      store.init (err, current) ->
-        assert.equal null, err
-        assert.equal 'some data', current
+      store = new SharedStore
+        temp: cacheTmpDir
+        loader: loader
+    
+      store.init()
 
+    it 'will throw an error first', ->
       store.on 'err', (err) ->
         assert.equal 'kaboom!', err.message
 
-      setTimeout ->
+    it 'will keep on streaming after an error is thrown', ->
+      Promise.delay(1500).then ->
         assert.equal '2nd value', store.getCurrent()
-        done()
-      , 2000 # wait for retryTimeout

@@ -69,7 +69,7 @@ crashRecovery = (tmpDir) ->
     setTimeout tearDownCrashHandler, 5000
 
   # if value hasn't been produced 10s after initializing the loader, we cleanup
-  # to prevent leaks
+  # to prevent leaks (in case it never produces a value)
   setTimeout tearDownCrashHandler, 10000
 
   {onDataLoaded, tearDownCrashHandler}
