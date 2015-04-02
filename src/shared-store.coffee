@@ -97,7 +97,8 @@ class SharedStore extends EventEmitter
     setTimeout =>
       @_createStream()
       @emit 'meta', @options
-      @_retryTimeout *= 2 # TODOCK: stop when it reaches a maximum
+      @_retryTimeout *= 2 # TODOCK: test me plz
+      @_retryTimeout = 10000 if @_retryTimeout > 10000 # TODOCK: test me plz
     , @_retryTimeout
 
   _handleUpdate: ({ data, time, source, usingCache }) =>
