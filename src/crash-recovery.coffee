@@ -35,7 +35,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 fs = require 'fs'
 path = require 'path'
 
-# TODOCK: something here relates to the event emitter leak - find it!
 crashRecovery = (tmpDir) ->
   onApplicationCrashed = (exitCode) ->
     return if exitCode == 0
@@ -65,8 +64,14 @@ crashRecovery = (tmpDir) ->
   tearDownCrashHandler = ->
     process.removeListener 'exit', onApplicationCrashed
 
-  onDataLoaded: ->
-    # if the app survives 5s after initial load, we belive it's fine
+  onDataLoaded = ->
+    # if the app survives 5s after initial load, we believe it's fine
     setTimeout tearDownCrashHandler, 5000
+
+  # if value hasn't been produced 10s after initializing the loader, we cleanup
+  # to prevent leaks
+  setTimeout tearDownCrashHandler, 10000
+
+  {onDataLoaded, tearDownCrashHandler}
 
 module.exports = crashRecovery

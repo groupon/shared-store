@@ -112,9 +112,13 @@ activeLoader = (meta, loader, tmpDir) ->
       data.usingCache = false
       data
 
-  insurance = crashRecovery tmpDir
+  {onDataLoaded, tearDownCrashHandler} = crashRecovery tmpDir
 
-  data = rawData.tap(insurance.onDataLoaded).publish()
+  data = rawData.tap(
+    onDataLoaded
+    tearDownCrashHandler
+    tearDownCrashHandler
+  ).publish()
   fromCache = tryCache tmpDir
 
   data.connect()

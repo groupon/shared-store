@@ -89,12 +89,10 @@ class SharedStore extends EventEmitter
   _createMeta: ->
     Observable.create (observer) =>
       @removeListener('meta', @_metaListener) if @_metaListener?
-      @_metaListener = (value) ->
-        observer.onNext value
+      @_metaListener = (value) -> observer.onNext value
       @on 'meta', @_metaListener
 
   _handleError: (err) =>
-    #console.log 'TODOCK retryTimeout: ' + @_retryTimeout
     @emit 'err', err
     setTimeout =>
       @_createStream()
@@ -103,7 +101,6 @@ class SharedStore extends EventEmitter
     , @_retryTimeout
 
   _handleUpdate: ({ data, time, source, usingCache }) =>
-    #console.log 'TODOCK handleUpdate'
     @_retryTimeout = 1000 if usingCache == false
     @_cache = freeze { data, time, source }
 
