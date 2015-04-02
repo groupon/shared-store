@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 fs = require 'fs'
 path = require 'path'
 
+# TODOCK: something here relates to the event emitter leak - find it!
 crashRecovery = (tmpDir) ->
   onApplicationCrashed = (exitCode) ->
     return if exitCode == 0

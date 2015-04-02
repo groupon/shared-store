@@ -45,21 +45,16 @@ freeze = require 'deep-freeze'
 safeMerge = require './safe-merge'
 
 class SharedStore extends EventEmitter
-  constructor: ({loader, temp, active}) ->
+  constructor: ({@loader, @temp, @active}) ->
     EventEmitter.call this
 
-    active ?= cluster.isMaster
-    temp = path.resolve temp
+    @active ?= cluster.isMaster
+    @temp = path.resolve @temp
 
-    meta = Observable.create (observer) =>
-      @on 'meta', (value) -> observer.onNext value
-
-    @stream = cachedLoader meta, loader, temp, active
-
-    @_receivedData = false
-    @stream.subscribe @_handleUpdate, @_handleError
+    @_createStream()
 
     @_cache = null
+    @_retryTimeout = 1000
 
   getCurrent: ->
     @_cache?.data
@@ -81,16 +76,36 @@ class SharedStore extends EventEmitter
         .subscribe resolve, reject
 
     @emit 'meta', options
+    @options = options
 
     result.nodeify callback
 
-  _handleError: (err) =>
-    return unless @_receivedData # pass err to init callback
-    @emit 'err', err
+  _createStream: ->
+    @subscription?.dispose()
+    meta = @_createMeta()
+    @stream = cachedLoader meta, @loader, @temp, @active
+    @subscription = @stream.subscribe @_handleUpdate, @_handleError
 
-  _handleUpdate: ({ data, time, source }) =>
-    @_receivedData = true
-    @_cache = freeze {data, time, source}
+  _createMeta: ->
+    Observable.create (observer) =>
+      @removeListener('meta', @_metaListener) if @_metaListener?
+      @_metaListener = (value) ->
+        observer.onNext value
+      @on 'meta', @_metaListener
+
+  _handleError: (err) =>
+    #console.log 'TODOCK retryTimeout: ' + @_retryTimeout
+    @emit 'err', err
+    setTimeout =>
+      @_createStream()
+      @emit 'meta', @options
+      @_retryTimeout *= 2 # TODOCK: stop when it reaches a maximum
+    , @_retryTimeout
+
+  _handleUpdate: ({ data, time, source, usingCache }) =>
+    #console.log 'TODOCK handleUpdate'
+    @_retryTimeout = 1000 if usingCache == false
+    @_cache = freeze { data, time, source }
 
     @emit 'changed', {
       isWorker: cluster.isWorker

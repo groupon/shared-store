@@ -72,7 +72,7 @@ cleanup = (tmpDir) ->
 
 readCacheFile = ({absolute}) ->
   readFile(absolute).then(JSON.parse).then ({ data, time }) ->
-    { data, time, source: absolute }
+    { data, time, source: absolute, usingCache: true }
 
 latestCacheFile = (tmpDir, watch = false) ->
   options = { watch, filter: isCacheFile }
@@ -106,7 +106,11 @@ tryCache = (tmpDir) ->
         Observable.throw error
 
 activeLoader = (meta, loader, tmpDir) ->
-  rawData = meta.flatMapLatest(loader)
+  rawData = meta
+    .flatMapLatest(loader)
+    .map (data) ->
+      data.usingCache = false
+      data
 
   insurance = crashRecovery tmpDir
 
