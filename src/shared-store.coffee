@@ -56,9 +56,9 @@ class SharedStore extends EventEmitter
       meta = @_createMeta()
       @stream = cachedLoader meta, loader, temp, active
       @subscription = @stream.subscribe @_handleUpdate, @_handleError
-
     @_createStream()
 
+    @on 'meta', @_handleMetaUpdate
     @_cache = null
     @_retryTimeout = 1000
 
@@ -88,9 +88,7 @@ class SharedStore extends EventEmitter
 
   _createMeta: ->
     Observable.create (observer) =>
-      @removeListener('meta', @_metaListener) if @_metaListener?
-      @_metaListener = (value) -> observer.onNext value
-      @on 'meta', @_metaListener
+      @_metaObserver = observer
 
   _handleError: (err) =>
     @emit 'err', err
@@ -105,6 +103,12 @@ class SharedStore extends EventEmitter
       id: cluster.worker?.id
     }
     @emit 'data', @_cache.data
+
+  _handleMetaUpdate: (value) =>
+    if @_metaObserver?
+      @_metaObserver.onNext value
+    else
+      setImmediate @_handleMetaUpdate, value
 
   _retry: =>
     @_createStream()
