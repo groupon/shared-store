@@ -68,10 +68,6 @@ crashRecovery = (tmpDir) ->
     # if the app survives 5s after initial load, we believe it's fine
     setTimeout tearDownCrashHandler, 5000
 
-  # if value hasn't been produced 10s after initializing the loader, we cleanup
-  # to prevent leaks (in case it never produces a value)
-  setTimeout tearDownCrashHandler, 10000
-
   {onDataLoaded, tearDownCrashHandler}
 
 module.exports = crashRecovery
