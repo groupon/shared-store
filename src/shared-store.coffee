@@ -45,11 +45,17 @@ freeze = require 'deep-freeze'
 safeMerge = require './safe-merge'
 
 class SharedStore extends EventEmitter
-  constructor: ({@loader, @temp, @active}) ->
+  constructor: ({loader, temp, active}) ->
     EventEmitter.call this
 
-    @active ?= cluster.isMaster
-    @temp = path.resolve @temp
+    active ?= cluster.isMaster
+    temp = path.resolve temp
+
+    @_createStream = =>
+      @subscription?.dispose()
+      meta = @_createMeta()
+      @stream = cachedLoader meta, loader, temp, active
+      @subscription = @stream.subscribe @_handleUpdate, @_handleError
 
     @_createStream()
 
@@ -79,12 +85,6 @@ class SharedStore extends EventEmitter
     @options = options
 
     result.nodeify callback
-
-  _createStream: ->
-    @subscription?.dispose()
-    meta = @_createMeta()
-    @stream = cachedLoader meta, @loader, @temp, @active
-    @subscription = @stream.subscribe @_handleUpdate, @_handleError
 
   _createMeta: ->
     Observable.create (observer) =>
