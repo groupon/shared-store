@@ -44,6 +44,10 @@ freeze = require 'deep-freeze'
 {cachedLoader} = require './cache'
 safeMerge = require './safe-merge'
 
+RETRY_MULTIPLIER = 2
+TEN_SECONDS = 1000 * 10
+TEN_MINUTES = 1000 * 60 * 10
+
 class SharedStore extends EventEmitter
   constructor: ({loader, temp, active}) ->
     EventEmitter.call this
@@ -60,7 +64,7 @@ class SharedStore extends EventEmitter
 
     @on 'meta', @_handleMetaUpdate
     @_cache = null
-    @_retryTimeout = 1000
+    @_retryTimeout = TEN_SECONDS
 
   getCurrent: ->
     @_cache?.data
@@ -96,7 +100,7 @@ class SharedStore extends EventEmitter
     setTimeout @_retry, @_retryTimeout
 
   _handleUpdate: ({ data, time, source, usingCache }) =>
-    @_retryTimeout = 1000 if usingCache == false
+    @_retryTimeout = TEN_SECONDS if usingCache == false
     @_cache = freeze { data, time, source }
 
     @emit 'changed', {
@@ -111,8 +115,8 @@ class SharedStore extends EventEmitter
   _retry: =>
     @_createStream()
     @emit 'meta', @options
-    @_retryTimeout *= 2 # TODOCK: test me plz
-    @_retryTimeout = 10000 if @_retryTimeout > 10000 # TODOCK: test me plz
+    @_retryTimeout *= RETRY_MULTIPLIER
+    @_retryTimeout = TEN_MINUTES if @_retryTimeout > TEN_MINUTES
 
 SharedStore.safeMerge = safeMerge
 
