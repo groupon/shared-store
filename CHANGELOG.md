@@ -1,3 +1,7 @@
+1.0.8
+-----
+* retry upon failure - @chkhoo #14
+
 1.0.7
 -----
 * fix fetching data from cache with init - @chkhoo #12
