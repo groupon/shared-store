@@ -44,6 +44,10 @@ freeze = require 'deep-freeze'
 {cachedLoader} = require './cache'
 safeMerge = require './safe-merge'
 
+RETRY_MULTIPLIER = 2
+TEN_SECONDS = 1000 * 10
+TEN_MINUTES = 1000 * 60 * 10
+
 class SharedStore extends EventEmitter
   constructor: ({loader, temp, active}) ->
     EventEmitter.call this
@@ -51,15 +55,16 @@ class SharedStore extends EventEmitter
     active ?= cluster.isMaster
     temp = path.resolve temp
 
-    meta = Observable.create (observer) =>
-      @on 'meta', (value) -> observer.onNext value
+    @_createStream = =>
+      @subscription?.dispose()
+      meta = @_createMeta()
+      @stream = cachedLoader meta, loader, temp, active
+      @subscription = @stream.subscribe @_handleUpdate, @_handleError
+    @_createStream()
 
-    @stream = cachedLoader meta, loader, temp, active
-
-    @_receivedData = false
-    @stream.subscribe @_handleUpdate, @_handleError
-
+    @on 'meta', @_handleMetaUpdate
     @_cache = null
+    @_retryTimeout = TEN_SECONDS
 
   getCurrent: ->
     @_cache?.data
@@ -84,19 +89,34 @@ class SharedStore extends EventEmitter
 
     result.nodeify callback
 
-  _handleError: (err) =>
-    return unless @_receivedData # pass err to init callback
-    @emit 'error', err
+  _createMeta: ->
+    @_metaObserver = null
+    Observable.create (observer) =>
+      observer.onNext(@_options) if @_options?
+      @_metaObserver = observer
 
-  _handleUpdate: ({ data, time, source }) =>
-    @_receivedData = true
-    @_cache = freeze {data, time, source}
+  _handleError: (err) =>
+    @emit 'err', err
+    setTimeout @_retry, @_retryTimeout
+
+  _handleUpdate: ({ data, time, source, usingCache }) =>
+    @_retryTimeout = TEN_SECONDS if usingCache == false
+    @_cache = freeze { data, time, source }
 
     @emit 'changed', {
       isWorker: cluster.isWorker
       id: cluster.worker?.id
     }
     @emit 'data', @_cache.data
+
+  _handleMetaUpdate: (@_options) =>
+    @_metaObserver?.onNext @_options
+
+  _retry: =>
+    @_createStream()
+    @emit 'meta', @options
+    @_retryTimeout *= RETRY_MULTIPLIER
+    @_retryTimeout = TEN_MINUTES if @_retryTimeout > TEN_MINUTES
 
 SharedStore.safeMerge = safeMerge
 

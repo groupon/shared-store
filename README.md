@@ -186,6 +186,16 @@ function fetch(headers) {
 If you don't set an interval,
 handling the `headers` argument isn't necessary.
 
+## Events
+
+Events are emitted on instances of the `SharedStore` class.  Most notably,
+error events are emitted as `'err'` and not `'error'`.  This is because
+unhandled `'error'` events throw, which isn't necessary when fetching fails
+due to HTTP connection timeouts, etc.
+
+In this scenario, the cached copy will continue to be used until the data
+source is available again.
+
 ## Tests
 Once you've cloned the repository, you can run:
 
