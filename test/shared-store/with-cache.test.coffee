@@ -59,7 +59,7 @@ describe 'SharedStore (with data already in cache)', ->
       store = new SharedStore
         temp: cacheTmpDir
         loader: loader
-    
+
       store.init()
 
     it 'will throw an error first', ->

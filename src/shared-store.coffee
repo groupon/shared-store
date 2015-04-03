@@ -94,12 +94,7 @@ class SharedStore extends EventEmitter
 
   _handleError: (err) =>
     @emit 'err', err
-    setTimeout =>
-      @_createStream()
-      @emit 'meta', @options
-      @_retryTimeout *= 2 # TODOCK: test me plz
-      @_retryTimeout = 10000 if @_retryTimeout > 10000 # TODOCK: test me plz
-    , @_retryTimeout
+    setTimeout @_retry, @_retryTimeout
 
   _handleUpdate: ({ data, time, source, usingCache }) =>
     @_retryTimeout = 1000 if usingCache == false
@@ -110,6 +105,12 @@ class SharedStore extends EventEmitter
       id: cluster.worker?.id
     }
     @emit 'data', @_cache.data
+
+  _retry: =>
+    @_createStream()
+    @emit 'meta', @options
+    @_retryTimeout *= 2 # TODOCK: test me plz
+    @_retryTimeout = 10000 if @_retryTimeout > 10000 # TODOCK: test me plz
 
 SharedStore.safeMerge = safeMerge
 
