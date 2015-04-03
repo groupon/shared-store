@@ -82,12 +82,13 @@ class SharedStore extends EventEmitter
         .subscribe resolve, reject
 
     @emit 'meta', options
-    @options = options
 
     result.nodeify callback
 
   _createMeta: ->
+    @_metaObserver = null
     Observable.create (observer) =>
+      observer.onNext(@_options) if @_options?
       @_metaObserver = observer
 
   _handleError: (err) =>
@@ -104,11 +105,8 @@ class SharedStore extends EventEmitter
     }
     @emit 'data', @_cache.data
 
-  _handleMetaUpdate: (value) =>
-    if @_metaObserver?
-      @_metaObserver.onNext value
-    else
-      setImmediate @_handleMetaUpdate, value
+  _handleMetaUpdate: (@_options) =>
+    @_metaObserver?.onNext @_options
 
   _retry: =>
     @_createStream()
