@@ -60,17 +60,11 @@ httpResource = ({fetch, interval}) ->
 
     lastBody
 
-  returnLastKnown = (error) ->
-    if lastBody?
-      debug 'Failed, return last known', error
-      lastBody
-    else Promise.reject error
-
   load = partial fromPromiseFunction, ->
     fetch({
       'If-None-Match': lastETag
       'If-Modified-Since': lastModified
-    }).then(checkModified, returnLastKnown)
+    }).then(checkModified)
 
   onInterval interval, load
 
