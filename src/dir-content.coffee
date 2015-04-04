@@ -98,7 +98,7 @@ dirContent = (dir, {watch, statFiles} = {}) ->
         props
 
   initial = fromPromiseFunction(statDir)
-    .flatMap(Observable.fromArray)
+    .flatMap(Observable.from)
 
   if watch
     initial.concat dirChanges(dir, {statFiles})
