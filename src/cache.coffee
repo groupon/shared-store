@@ -121,8 +121,6 @@ activeLoader = (meta, loader, tmpDir) ->
   ).publish()
   fromCache = tryCache tmpDir
 
-  data.connect()
-
   cachedData = fromCache
     .takeUntil(data)
     .merge(data)
@@ -130,15 +128,16 @@ activeLoader = (meta, loader, tmpDir) ->
     .flatMapLatest partial(writeCache, tmpDir)
     .publish()
 
-  cachedData.connect()
-
+  cachedData.connectAll = ->
+    data.connect()
+    cachedData.connect()
   return cachedData
 
 passiveLoader = (tmpDir) ->
   rawData = latestCacheFile(tmpDir, true)
 
   data = rawData.publish()
-  data.connect()
+  data.connectAll = data.connect
   return data
 
 @cachedLoader = (meta, loader, tmpDir, active) ->
