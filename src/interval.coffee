@@ -33,7 +33,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 'use strict'
 
 {Observable} = require 'rx'
-Promise = require 'bluebird'
 
 onInterval = (interval, load) ->
   if interval > 0

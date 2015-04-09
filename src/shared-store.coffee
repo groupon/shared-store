@@ -60,6 +60,7 @@ class SharedStore extends EventEmitter
       meta = @_createMeta()
       @stream = cachedLoader meta, loader, temp, active
       @subscription = @stream.subscribe @_handleUpdate, @_handleError
+      @stream.connectAll()
     @_createStream()
 
     @on 'meta', @_handleMetaUpdate
