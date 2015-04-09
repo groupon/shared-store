@@ -1,3 +1,7 @@
+1.0.9
+-----
+* fix getaddrinfo ENOTFOUND by connecting only when subscribed - @chkhoo #17
+
 1.0.8
 -----
 * retry upon failure - @chkhoo #14
