@@ -41,7 +41,7 @@ Promise = require 'bluebird'
 freeze = require 'deep-freeze'
 {property} = require 'lodash'
 
-{cachedLoader} = require './cache'
+{cachedLoader, latestCacheFile} = require './cache'
 safeMerge = require './safe-merge'
 
 RETRY_MULTIPLIER = 2
@@ -53,14 +53,13 @@ class SharedStore extends EventEmitter
     EventEmitter.call this
 
     active ?= cluster.isMaster
-    temp = path.resolve temp
+    @_temp = path.resolve temp
 
     @_createStream = =>
       @subscription?.dispose()
       meta = @_createMeta()
-      @stream = cachedLoader meta, loader, temp, active
+      @stream = cachedLoader meta, loader, @_temp, active
       @subscription = @stream.subscribe @_handleUpdate, @_handleError
-      @stream.connectAll()
     @_createStream()
 
     @on 'meta', @_handleMetaUpdate
@@ -82,9 +81,13 @@ class SharedStore extends EventEmitter
       current = @getCurrent()
       return resolve(current) if current?
 
+      originalErr = null
       @stream.take(1)
         .map property 'data'
-        .subscribe resolve, reject
+        .tapOnError (err) -> originalErr = err
+        .catch latestCacheFile @_temp
+        .subscribe resolve, (err) ->
+          reject originalErr
 
     @emit 'meta', options
 

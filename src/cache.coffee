@@ -118,29 +118,30 @@ activeLoader = (meta, loader, tmpDir) ->
     onDataLoaded
     tearDownCrashHandler
     tearDownCrashHandler
-  ).publish()
+  )
   fromCache = tryCache tmpDir
 
-  cachedData = fromCache
+  fromCache
     .takeUntil(data)
     .merge(data)
     .distinctUntilChanged property('data'), isEqual
     .flatMapLatest partial(writeCache, tmpDir)
     .publish()
 
-  cachedData.connectAll = ->
-    data.connect()
-    cachedData.connect()
-  return cachedData
-
 passiveLoader = (tmpDir) ->
-  rawData = latestCacheFile(tmpDir, true)
-
-  data = rawData.publish()
-  data.connectAll = data.connect
-  return data
+  latestCacheFile(tmpDir, true).publish()
 
 @cachedLoader = (meta, loader, tmpDir, active) ->
   debug 'cachedLoader(%j)', active
-  if active then activeLoader(meta, loader, tmpDir)
-  else passiveLoader(tmpDir)
+
+  loader = if active
+    activeLoader(meta, loader, tmpDir)
+  else
+    passiveLoader(tmpDir)
+
+  Observable.create (observer) ->
+    loader.subscribe observer
+    loader.connect()
+    return
+
+@latestCacheFile = latestCacheFile
