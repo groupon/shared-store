@@ -37,9 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 onInterval = (interval, load) ->
   if interval > 0
     if interval < 1000
-      Observable.throw new Error """
-        Interval has to be at least 1s: #{interval}ms
-      """
+      Observable.throw new Error "Interval has to be at least 1s: #{interval}ms"
     else
       load().concat(
         Observable.interval(interval).flatMap(load)
