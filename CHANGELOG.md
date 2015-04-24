@@ -1,3 +1,7 @@
+1.0.10
+------
+* fix ENOTFOUND error by intercepting init rejection - @chkhoo #18
+
 1.0.9
 -----
 * fix getaddrinfo ENOTFOUND by connecting only when subscribed - @chkhoo #17
