@@ -83,11 +83,15 @@ class SharedStore extends EventEmitter
 
       originalErr = null
       @stream.take(1)
-        .map property 'data'
         .tapOnError (err) -> originalErr = err
         .catch latestCacheFile @_temp
-        .subscribe resolve, (err) ->
-          reject originalErr
+        .subscribe(
+          ({ data, time, source }) =>
+            @_cache = freeze { data, time, source }
+            resolve data
+          (err) ->
+            reject originalErr
+        )
 
     @emit 'meta', options
 
