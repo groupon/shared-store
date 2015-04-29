@@ -124,7 +124,7 @@ class SharedStore extends EventEmitter
 
   _retry: =>
     @_createStream()
-    @emit 'meta', @options
+    @emit 'meta', @_options
     @_retryTimeout *= RETRY_MULTIPLIER
     @_retryTimeout = TEN_MINUTES if @_retryTimeout > TEN_MINUTES
 
