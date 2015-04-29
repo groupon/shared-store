@@ -78,16 +78,22 @@ class SharedStore extends EventEmitter
       options = {}
 
     result = new Promise (resolve, reject) =>
-      current = @getCurrent()
-      return resolve(current) if current?
+      handleData = (data) =>
+        @removeListener 'err', handleErr
+        resolve data
 
-      originalErr = null
-      @stream.take(1)
-        .map property 'data'
-        .tapOnError (err) -> originalErr = err
-        .catch latestCacheFile @_temp
-        .subscribe resolve, (err) ->
-          reject originalErr
+      handleErr = (err) =>
+        @removeListener 'data', handleData
+        latestCacheFile(@_temp).subscribe(
+          (cache) =>
+            @_handleUpdate cache
+            resolve cache.data
+          ->
+            reject err
+        )
+
+      @once 'data', handleData
+      @once 'err', handleErr
 
     @emit 'meta', options
 
