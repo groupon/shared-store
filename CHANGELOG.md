@@ -1,3 +1,8 @@
+1.0.11
+------
+* emit correct @_options to meta - @chkhoo #20
+* fix when store.init errors, fetches from cache & getCurrent is null - @chkhoo #19
+
 1.0.10
 ------
 * fix ENOTFOUND error by intercepting init rejection - @chkhoo #18

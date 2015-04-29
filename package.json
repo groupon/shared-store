@@ -1,6 +1,6 @@
 {
   "name": "shared-store",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Keeping config data in sync",
   "main": "lib/shared-store.js",
   "author": "Jan Krems <jan.krems@groupon.com>",
