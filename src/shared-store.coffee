@@ -78,6 +78,8 @@ class SharedStore extends EventEmitter
       options = {}
 
     result = new Promise (resolve, reject) =>
+      return resolve @_cache.data if @_cache?
+
       handleData = (data) =>
         @removeListener 'err', handleErr
         resolve data

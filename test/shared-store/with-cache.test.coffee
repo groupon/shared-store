@@ -42,6 +42,22 @@ describe 'SharedStore (with data already in cache)', ->
     it 'should return latest data in getCurrent', ->
       assert.equal 'other data', store.getCurrent()
 
+  describe 'having cache data = loaded data', ->
+    store = null
+
+    beforeEach ->
+      store = new SharedStore
+        temp: cacheTmpDir
+        loader: Observable.just {data: 'some data'}
+
+    it "should resolve the promise even if there's a long period between construction & initialization", ->
+      Promise
+        .delay 1000
+        .then ->
+          store.init()
+        .then (data) ->
+          assert.equal 'some data', data
+
   describe 'throwing a load error & then producing a value', ->
     store = thrownError = null
 
