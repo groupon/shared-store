@@ -1,3 +1,7 @@
+1.0.12
+------
+* fix to resolve store.init if cache = loaded data - @chkhoo #22
+
 1.0.11
 ------
 * emit correct @_options to meta - @chkhoo #20
