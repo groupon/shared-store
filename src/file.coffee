@@ -44,14 +44,11 @@ debug = require('debug') 'shared-store:file'
 onInterval = require './interval'
 {dirChanges} = require './dir-content'
 
-readFile = promisify fs.readFile
+readFileAsync = promisify fs.readFile
 
 fileChanges = (filename, options) ->
   dirChanges(path.dirname(filename), options)
     .filter ({absolute}) -> absolute == filename
-
-isMissingError = (error) ->
-  error.cause && error.cause.code == 'ENOENT'
 
 parserFromExtension = (filename) ->
   switch path.extname filename
@@ -77,12 +74,12 @@ fileContent = (filename, options = {}) ->
     { data, time: Date.now(), source: filename }
 
   load = partial fromPromiseFunction, ->
-    debug 'readFile %s', filename
-    readFile(filename, 'utf8')
+    debug 'readFileAsync %s', filename
+    readFileAsync(filename, 'utf8')
       .tap loaded
       .then parse
       .then wrap
-      .catch isMissingError, returnDefault
+      .catch returnDefault
 
   if watch
     load().concat fileChanges(filename).flatMap(load)
