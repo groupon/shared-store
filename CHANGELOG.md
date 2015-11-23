@@ -1,3 +1,8 @@
+1.1.0
+-----
+* More useful parse errors for files - @jkrems
+  https://github.com/groupon/shared-store/pull/24
+
 1.0.12
 ------
 * fix to resolve store.init if cache = loaded data - @chkhoo #22
