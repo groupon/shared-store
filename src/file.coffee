@@ -53,10 +53,24 @@ fileChanges = (filename, options) ->
 isMissingError = (error) ->
   error.cause && error.cause.code == 'ENOENT'
 
+parseCSON = (filename, content) ->
+  try
+    CSON.parse content
+  catch err
+    err.message += " in #{filename}:#{err.location.first_line + 1}"
+    throw err
+
+parseJSON = (filename, content) ->
+  try
+    JSON.parse content
+  catch err
+    err.message += " in #{filename}"
+    throw err
+
 parserFromExtension = (filename) ->
   switch path.extname filename
-    when '.json' then JSON.parse
-    when '.cson' then CSON.parse
+    when '.json' then partial(parseJSON, filename)
+    when '.cson' then partial(parseCSON, filename)
     else identity
 
 fileContent = (filename, options = {}) ->

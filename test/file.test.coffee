@@ -68,3 +68,29 @@ describe 'fileContent', ->
       it 'returns the updated content', ->
         @changed.then ({data}) =>
           assert.deepEqual @updated, data
+
+  describe 'a CSON file with syntax errors', ->
+    before ->
+      @filename = path.join os.tmpdir(), 'some-file.cson'
+      # The content is missing a closing quote after Hello
+      writeFile @filename, 'x: 10\nfoo: 13\nbar: "Hello\nzapp: 42\n'
+
+    it 'fails with a helpful error message', ->
+      checkError fileContent(@filename, watch: false), (error) =>
+        assert.equal 'SyntaxError', error.name
+        assert.equal """
+          missing " in #{@filename}:3
+        """, error.message
+
+  describe 'a JSON file with syntax errors', ->
+    before ->
+      @filename = path.join os.tmpdir(), 'some-file.json'
+      # The content is missing a comma after 42
+      writeFile @filename, '{\n  "foo": 42\n  "bar": 13\n}\n'
+
+    it 'fails with a helpful error message', ->
+      checkError fileContent(@filename, watch: false), (error) =>
+        assert.equal 'SyntaxError', error.name
+        assert.equal """
+          Unexpected string in #{@filename}
+        """, error.message
