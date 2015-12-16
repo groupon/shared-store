@@ -1,3 +1,17 @@
+### 2.0.0
+
+#### Breaking Changes
+
+We are only testing against node v4 from now on.
+
+*See: [`e782cba`](https://github.com/groupon/shared-store/commit/e782cba29798d6bd5b1913d15e4b2b6b58ee53c4)*
+
+#### Commits
+
+* Switch from npub to nlm - **[@jkrems](https://github.com/jkrems)** [#25](https://github.com/groupon/shared-store/pull/25)
+  - [`e782cba`](https://github.com/groupon/shared-store/commit/e782cba29798d6bd5b1913d15e4b2b6b58ee53c4) **chore:** Switch from npub to nlm
+
+
 1.1.0
 -----
 * More useful parse errors for files - @jkrems
