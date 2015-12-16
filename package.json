@@ -8,31 +8,30 @@
     "type": "git",
     "url": "https://github.com/groupon/shared-store.git"
   },
+  "files": [
+    "lib",
+    "file.js",
+    "http.js"
+  ],
   "bugs": "https://github.com/groupon/shared-store.git",
-  "license": "BSD-2-Clause",
+  "license": "BSD-3-Clause",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org",
-    "license": {
-      "exclude": [
-        "lib",
-        "test"
-      ]
-    }
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "build": "npub prep && coffeelint src test && coffee -cbo lib src",
+    "build": "coffeelint src test && coffee -cbo lib src",
     "watch": "coffee -wcbo lib src & nodemon -w lib -w test -x mocha",
     "pretest": "rm -rf lib && npm run build",
     "test": "mocha",
-    "posttest": "npub verify"
+    "posttest": "nlm release"
   },
   "devDependencies": {
     "assertive": "^1.4.1",
     "coffee-script": "1.9.0",
     "coffeelint": "^1.9.2",
     "mocha": "^2.1.0",
+    "nlm": "^1.0.1",
     "nodemon": "^1.3.7",
-    "npub": "^2.0.1",
     "rimraf": "^2.2.8",
     "tmp": "0.0.24"
   },
