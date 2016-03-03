@@ -1,2 +1,2 @@
+--compilers test.coffee:coffee-script/register
 --recursive
---compilers coffee:coffee-script/register
