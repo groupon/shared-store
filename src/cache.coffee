@@ -102,6 +102,9 @@ tryCache = (tmpDir) ->
       if error.code == 'ENOENT'
         debug 'No cache file found'
         Observable.empty()
+      else if error instanceof SyntaxError
+        debug "Invalid cache file found: #{error.message}"
+        Observable.empty()
       else
         Observable.throw error
 
