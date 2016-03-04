@@ -1,3 +1,9 @@
+### 2.0.1
+
+* fix: survive invalid json tmpfile on init() - **[@dbushong](https://github.com/dbushong)** [#26](https://github.com/groupon/shared-store/pull/26)
+  - [`7d5c9cc`](https://github.com/groupon/shared-store/commit/7d5c9ccae0b8f4d3ab3fed80ad29fdb90ff8c915) **fix:** survive invalid json tmpfile on init()
+
+
 ### 2.0.0
 
 #### Breaking Changes
