@@ -1,3 +1,9 @@
+### 2.0.2
+
+* Update to nlm v2 - **[@jkrems](https://github.com/jkrems)** [#27](https://github.com/groupon/shared-store/pull/27)
+  - [`9d61ca8`](https://github.com/groupon/shared-store/commit/9d61ca8a9720139bdfb8f8114f5ed597f5d3e05c) **chore:** Update to nlm v2
+
+
 ### 2.0.1
 
 * fix: survive invalid json tmpfile on init() - **[@dbushong](https://github.com/dbushong)** [#26](https://github.com/groupon/shared-store/pull/26)
