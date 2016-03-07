@@ -7,7 +7,7 @@ var SharedStore = require('../');
 var httpResource = require('../lib/http');
 
 function fetchData(headers) {
-  return Bluebird.delay({
+  return Bluebird.resolve({
     url: 'http://my-url',
     response: {
       headers: {
@@ -16,7 +16,7 @@ function fetchData(headers) {
       }
     },
     body: { incoming: headers, crashing: false }
-  }, 1000); // delay to ensure temp reads are faster
+  }).delay(1000); // delay to ensure temp reads are faster
 }
 
 var options = {

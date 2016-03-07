@@ -14,8 +14,8 @@ describe 'SharedStore (with data already in cache)', ->
   cacheTmpDir = null
 
   beforeEach ->
-    tmpDir(unsafeCleanup: true).then (args) ->
-      cacheTmpDir = args[0]
+    tmpDir(unsafeCleanup: true).then (createdDir) ->
+      cacheTmpDir = createdDir
       store = new SharedStore
         temp: cacheTmpDir
         loader: Observable.just {data: 'some data'}
