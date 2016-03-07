@@ -11,7 +11,7 @@ _ = require 'lodash'
 {timestampName} = require '../lib/cache'
 
 writeFile = promisify fs.writeFile
-execFile = promisify childProcess.execFile
+execFile = promisify childProcess.execFile, multiArgs: true
 
 childPath = "#{__dirname}/crashing"
 
@@ -57,5 +57,6 @@ describe 'Crash avoidance', ->
     env = _.extend { DEBUG: 'shared-store:cache' }, process.env
     execFile(childPath, [ @tmpDir ], { env })
       .then ([stdout, stderr]) ->
+        console.log stdout, stderr
         assert.include 'Unexpected end of input', stderr
         assert.equal 'ok\n', stdout

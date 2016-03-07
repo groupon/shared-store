@@ -34,7 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 {
   merge
-  pluck
+  map
   max
   reduce
   filter
@@ -48,9 +48,9 @@ sourceList = (result, source) ->
   toArray(result).concat toArray(source)
 
 safeMerge = (args...) ->
-  data = merge {}, pluck(args, 'data')...
-  time = max filter(pluck args, 'time')
-  source = reduce pluck(args, 'source'), sourceList
+  data = merge {}, map(args, 'data')...
+  time = max filter(map args, 'time')
+  source = reduce map(args, 'source'), sourceList
 
   { data, time, source }
 

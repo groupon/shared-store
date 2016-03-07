@@ -54,6 +54,8 @@ class SharedStore extends EventEmitter
 
     active ?= cluster.isMaster
     @_temp = path.resolve temp
+    if @_temp == '/'
+      throw new Error "Refusing to use / as a tmp directory"
 
     @_createStream = =>
       @subscription?.dispose()
