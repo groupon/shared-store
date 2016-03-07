@@ -1,3 +1,10 @@
+### 2.0.3
+
+* Apply latest nlm generator & upgrade to bluebird 3.x - **[@i-tier-bot](https://github.com/i-tier-bot)** [#28](https://github.com/groupon/shared-store/pull/28)
+  - [`55b3a28`](https://github.com/groupon/shared-store/commit/55b3a2878c6a6aacef08c8f94b23c5b7dc978e04) **chore:** Apply latest nlm generator
+  - [`cac9301`](https://github.com/groupon/shared-store/commit/cac9301c64169aefea505a957fba036f0dc54ce9) **fix:** Changes for bluebird 3
+
+
 ### 2.0.2
 
 * Update to nlm v2 - **[@jkrems](https://github.com/jkrems)** [#27](https://github.com/groupon/shared-store/pull/27)
