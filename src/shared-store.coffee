@@ -52,7 +52,7 @@ class SharedStore extends EventEmitter
   constructor: ({loader, temp, active}) ->
     EventEmitter.call this
 
-    active ?= cluster.isMaster
+    @_active = active ? cluster.isMaster
     @_temp = path.resolve temp
     if @_temp == '/'
       throw new Error "Refusing to use / as a tmp directory"
@@ -60,13 +60,16 @@ class SharedStore extends EventEmitter
     @_createStream = =>
       @subscription?.dispose()
       meta = @_createMeta()
-      @stream = cachedLoader meta, loader, @_temp, active
+      @stream = cachedLoader meta, loader, @_temp, @_active
       @subscription = @stream.subscribe @_handleUpdate, @_handleError
     @_createStream()
 
     @on 'meta', @_handleMetaUpdate
     @_cache = null
     @_retryTimeout = TEN_SECONDS
+
+  setActive: (@_active=true) ->
+    @_createStream()
 
   getCurrent: ->
     @_cache?.data

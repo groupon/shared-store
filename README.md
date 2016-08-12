@@ -95,6 +95,9 @@ Get the last known version of the data.
 This function is safe to call once `init` finished.
 It will just return `undefined` otherwise.
 
+#### `store.setActive(active=true)`
+
+Enables/disables active mode (see constructor).
 
 ### `SharedStore.safeMerge`
 
