@@ -66,6 +66,7 @@ describe 'SharedStore', ->
         @passiveStore = new SharedStore {
           temp: @tmpDir
           active: false
+          loader: Observable.just(data: { static: 'data' }, source: 'static')
         }
         @passiveStore.init(opt: '-- ignored --')
 
@@ -73,6 +74,13 @@ describe 'SharedStore', ->
         assert.deepEqual(
           INITIAL_DATA, @passiveStore.getCurrent()
         )
+
+      it 'can switch to active', (done) ->
+        @passiveStore.setActive()
+        setTimeout (=>
+          assert.deepEqual({ static: 'data' }, @passiveStore.getCurrent())
+          done()
+        ), 300
 
     describe 'after changing a file', ->
       before (done) ->
