@@ -1,3 +1,9 @@
+### 2.1.0
+
+* feat: allow switching active mode after instantiation - **[@dbushong](https://github.com/dbushong)** [#29](https://github.com/groupon/shared-store/pull/29)
+  - [`115352a`](https://github.com/groupon/shared-store/commit/115352aec3ec3037587fbda622f47efa6ec97581) **feat:** allow switching active mode after instantiation
+
+
 ### 2.0.3
 
 * Apply latest nlm generator & upgrade to bluebird 3.x - **[@i-tier-bot](https://github.com/i-tier-bot)** [#28](https://github.com/groupon/shared-store/pull/28)
