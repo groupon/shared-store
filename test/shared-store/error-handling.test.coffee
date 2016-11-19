@@ -29,6 +29,7 @@ describe 'SharedStore (error handling)', ->
           assert.hasType undefined, store.getCurrent()
           assert.equal 'This throws!', err.message
           done()
+        null
 
     describe 'with a cache', ->
       tmpDir = null
@@ -55,6 +56,7 @@ describe 'SharedStore (error handling)', ->
           assert.equal 'tastic', store.getCurrent()
           assert.equal null, err
           done()
+        null
 
   describe 'reading from a loader that throws an error after a successful read', ->
     tmpDir = null
