@@ -72,6 +72,6 @@ httpResource = ({fetch, interval}) ->
       'If-Modified-Since': lastModified
     }).then(checkModified, returnLastKnown)
 
-  onInterval interval, load
+  onInterval(interval, load).distinctUntilChanged(null, (a, b) -> a == b)
 
 module.exports = httpResource
