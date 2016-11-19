@@ -1,3 +1,11 @@
+### 2.1.1
+
+* stop emitting updates on HTTP 304s - **[@dbushong](https://github.com/dbushong)** [#30](https://github.com/groupon/shared-store/pull/30)
+  - [`b5ea890`](https://github.com/groupon/shared-store/commit/b5ea890801b616759577eada2257e97786a6fdf8) **perf:** stop emitting updates on HTTP 304s
+  - [`4d1a718`](https://github.com/groupon/shared-store/commit/4d1a7183d6fa96f1ff2c480cd37177a910e5d8b3) **chore:** update nlm & mocha; rebuild JS
+  - [`9a8f23b`](https://github.com/groupon/shared-store/commit/9a8f23be74eb479cb5ad7faa7fe7a24481b542e3) **chore:** update coffeelint & make code pass
+
+
 ### 2.1.0
 
 * feat: allow switching active mode after instantiation - **[@dbushong](https://github.com/dbushong)** [#29](https://github.com/groupon/shared-store/pull/29)
