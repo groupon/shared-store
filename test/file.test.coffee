@@ -5,7 +5,7 @@ path = require 'path'
 os = require 'os'
 
 assert = require 'assertive'
-{promisify} = Promise = require 'bluebird'
+{promisify} = require 'bluebird'
 CSON = require 'cson-parser'
 
 fileContent = require '../lib/file'

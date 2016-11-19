@@ -37,9 +37,8 @@ cluster = require 'cluster'
 {EventEmitter} = require 'events'
 
 {Observable} = require 'rx'
-Promise = require 'bluebird'
+Bluebird = require 'bluebird'
 freeze = require 'deep-freeze'
-{property} = require 'lodash'
 
 {cachedLoader, latestCacheFile} = require './cache'
 safeMerge = require './safe-merge'
@@ -82,7 +81,7 @@ class SharedStore extends EventEmitter
       callback = options
       options = {}
 
-    result = new Promise (resolve, reject) =>
+    result = new Bluebird (resolve, reject) =>
       return resolve @_cache.data if @_cache?
 
       handleData = (data) =>

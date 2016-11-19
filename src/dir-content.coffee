@@ -36,8 +36,8 @@ path = require 'path'
 fs = require 'fs'
 
 {Observable} = require 'rx'
-{promisify} = Promise = require 'bluebird'
-{extend, compose} = require 'lodash'
+{promisify} = require 'bluebird'
+{extend} = require 'lodash'
 debug = require('debug') 'shared-store:dir-content'
 
 {fromPromiseFunction} = require './promise'
@@ -79,9 +79,10 @@ dirChanges = (dir, {statFiles} = {}) ->
       else
         onNext props
 
-    return dispose = ->
+    dispose = ->
       debug 'Closing watcher: %s', dir
       watcher.close()
+    return dispose
 
 dirContent = (dir, {watch, statFiles} = {}) ->
   statFiles ?= false

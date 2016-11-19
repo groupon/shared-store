@@ -33,13 +33,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 'use strict'
 
 {Observable, config} = require 'rx'
-Promise = require 'bluebird'
+Bluebird = require 'bluebird'
 
-config.Promise ?= Promise
+config.Promise ?= Bluebird
 
 fromPromiseFunction = (fn) ->
   Observable.create (observer) ->
-    p = Promise.try fn
+    p = Bluebird.try fn
 
     onResolved = (value) ->
       observer.onNext value

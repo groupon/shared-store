@@ -32,8 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 'use strict'
 
-path = require 'path'
-
 {Observable} = require 'rx'
 
 {dirChanges} = dirContent = require './dir-content'

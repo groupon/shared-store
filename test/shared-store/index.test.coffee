@@ -50,6 +50,7 @@ describe 'SharedStore', ->
           )
       }
       @store.init opt: 'value', (err, @initCallbackData) => done(err)
+      null
 
     it 'returns the initial data', ->
       assert.deepEqual INITIAL_DATA, @store.getCurrent()
