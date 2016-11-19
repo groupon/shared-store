@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 'use strict'
 
-Promise = require 'bluebird'
+Bluebird = require 'bluebird'
 debug = require('debug') 'shared-store:http'
 {partial} = require 'lodash'
 
@@ -64,7 +64,7 @@ httpResource = ({fetch, interval}) ->
     if lastBody?
       debug 'Failed, return last known', error
       lastBody
-    else Promise.reject error
+    else Bluebird.reject error
 
   load = partial fromPromiseFunction, ->
     fetch({

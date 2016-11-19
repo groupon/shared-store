@@ -4,7 +4,7 @@ assert = require 'assertive'
 
 {Observable} = require 'rx'
 
-module.exports = checkError = (observable, fn) ->
+checkError = (observable, fn) ->
   OK = {}
   observable
     .catch (err) ->
@@ -12,3 +12,5 @@ module.exports = checkError = (observable, fn) ->
       Observable.just OK
     .toPromise()
     .then (value) -> assert.equal OK, value
+
+module.exports = checkError

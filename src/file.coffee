@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 fs = require 'fs'
 path = require 'path'
 
-{promisify} = Promise = require 'bluebird'
+{promisify} = Bluebird = require 'bluebird'
 {partial, identity} = require 'lodash'
 CSON = require 'cson-parser'
 debug = require('debug') 'shared-store:file'
@@ -74,15 +74,15 @@ parserFromExtension = (filename) ->
     else identity
 
 fileContent = (filename, options = {}) ->
-  {defaultValue, watch, interval, parse, root} = options
-  filename = path.resolve root, filename if root?
+  {defaultValue, watch, interval, parse, root: rootDir} = options
+  filename = path.resolve rootDir, filename if rootDir?
   parse ?= parserFromExtension filename
   hasDefault = defaultValue != undefined
   debug 'fileContent, watch: %j', !!watch, filename
 
   returnDefault = (error) ->
     if hasDefault then defaultValue
-    else Promise.reject error
+    else Bluebird.reject error
 
   loaded = (content) ->
     debug 'Parsing %j', content

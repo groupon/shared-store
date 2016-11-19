@@ -1,14 +1,13 @@
 'use strict'
 
 assert = require 'assertive'
-Promise = require 'bluebird'
+Bluebird = require 'bluebird'
 {Observable} = require 'rx'
 tmp = require 'tmp'
 
 SharedStore = require '../../'
-fileContent = require '../../file'
 
-tmpDir = Promise.promisify tmp.dir, tmp
+tmpDir = Bluebird.promisify tmp.dir, tmp
 
 describe 'SharedStore (with data already in cache)', ->
   cacheTmpDir = null
@@ -34,7 +33,7 @@ describe 'SharedStore (with data already in cache)', ->
         notSoCurrent = current
 
     beforeEach ->
-      Promise.delay 1000
+      Bluebird.delay 1000
 
     it 'should return cached data immediately in callback', ->
       assert.equal 'some data', notSoCurrent
@@ -51,7 +50,7 @@ describe 'SharedStore (with data already in cache)', ->
         loader: Observable.just {data: 'some data'}
 
     it "should resolve the promise even if there's a long period between construction & initialization", ->
-      Promise
+      Bluebird
         .delay 1000
         .then ->
           store.init()
@@ -65,7 +64,7 @@ describe 'SharedStore (with data already in cache)', ->
       thrownError = false
       loader = ->
         Observable.create (observer) ->
-          Promise.delay(250).then ->
+          Bluebird.delay(250).then ->
             unless thrownError
               observer.onError new Error 'kaboom!'
               thrownError = true
@@ -83,5 +82,5 @@ describe 'SharedStore (with data already in cache)', ->
         assert.equal 'kaboom!', err.message
 
     it 'will keep on streaming after an error is thrown', ->
-      Promise.delay(1500).then ->
+      Bluebird.delay(1500).then ->
         assert.equal '2nd value', store.getCurrent()

@@ -38,7 +38,7 @@ fs = require 'fs'
 {promisify} = require 'bluebird'
 {Observable} = require 'rx'
 mkdirp = require 'mkdirp'
-{identity, isEqual, property, partial} = require 'lodash'
+{isEqual, property, partial} = require 'lodash'
 debug = require('debug') 'shared-store:cache'
 
 {fromPromiseFunction} = require './promise'
@@ -111,9 +111,9 @@ tryCache = (tmpDir) ->
 activeLoader = (meta, loader, tmpDir) ->
   rawData = meta
     .flatMapLatest(loader)
-    .map (data) ->
-      data.usingCache = false
-      data
+    .map (otherData) ->
+      otherData.usingCache = false
+      otherData
 
   {onDataLoaded, tearDownCrashHandler} = crashRecovery tmpDir
 

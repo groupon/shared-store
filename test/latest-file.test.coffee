@@ -7,7 +7,7 @@ fs = require 'fs'
 assert = require 'assertive'
 rimraf = require 'rimraf'
 mkdirp = require 'mkdirp'
-{promisify} = Promise = require 'bluebird'
+{promisify} = Bluebird = require 'bluebird'
 
 latestFile = require '../lib/latest-file'
 
@@ -53,7 +53,7 @@ describe 'latestFile', ->
     describe 'with two files', ->
       before ->
         @timeout 3000
-        Promise.each [
+        Bluebird.each [
           'first.json', 'second.json'
         ], (filename) =>
           absolute = path.join @dir, filename

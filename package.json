@@ -14,6 +14,7 @@
   },
   "scripts": {
     "build": "rm -rf lib && coffee --no-header -cbo lib src",
+    "lint": "coffeelint src test",
     "pretest": "npm run build",
     "test": "mocha",
     "posttest": "nlm verify",
@@ -38,7 +39,12 @@
   "devDependencies": {
     "assertive": "^2.1.0",
     "coffee-script": "^1.10.0",
-    "coffeelint": "^1.9.2",
+    "coffeelint": "~1.16.0",
+    "coffeelint-config-groupon": "^3.2.0",
+    "coffeelint-forbidden-keywords": "~0.1.1",
+    "coffeelint-no-mocha-only": "^1.0.0",
+    "coffeelint-use-strict": "^1.0.0",
+    "coffeescope2": "^0.4.3",
     "mocha": "^3.1.2",
     "nlm": "^3.0.0",
     "nodemon": "^1.0.0",

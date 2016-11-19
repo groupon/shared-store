@@ -39,8 +39,8 @@ describe 'SharedStore (error handling)', ->
           store = new SharedStore
             temp: tmpDir
             loader: -> Observable.just {data: 'tastic'}
-          store.init (err, data) ->
-            done(err)
+          store.init (storeErr, data) ->
+            done(storeErr)
 
       it 'will return the cache through callback & getCurrent', (done) ->
         thrownError = false
