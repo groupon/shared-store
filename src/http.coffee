@@ -52,6 +52,7 @@ httpResource = ({fetch, interval}) ->
     {headers, statusCode} = response
     if statusCode == 304
       debug 'cache headers match'
+      response.resume() # consume the (empty) body
     else
       debug 'cache header mismatch'
       lastBody = wrap body, url
