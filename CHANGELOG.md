@@ -1,3 +1,10 @@
+### 2.1.2
+
+* Safer interval handling - **[@jkrems](https://github.com/jkrems)** [#31](https://github.com/groupon/shared-store/pull/31)
+  - [`bfb7276`](https://github.com/groupon/shared-store/commit/bfb72765ba460a2f1af73b93eb5715f222cdf0ba) **fix:** Safer interval handling
+  - [`4bd2ffa`](https://github.com/groupon/shared-store/commit/4bd2ffaafa666916e7e6384ab41d7479affe46cd) **test:** Pass on node 6
+
+
 ### 2.1.1
 
 * stop emitting updates on HTTP 304s - **[@dbushong](https://github.com/dbushong)** [#30](https://github.com/groupon/shared-store/pull/30)
