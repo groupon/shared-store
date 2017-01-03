@@ -1,3 +1,9 @@
+### 2.1.3
+
+* Consume body of 304 response - **[@jkrems](https://github.com/jkrems)** [#32](https://github.com/groupon/shared-store/pull/32)
+  - [`1453210`](https://github.com/groupon/shared-store/commit/145321022e7110d9509424d0b982fbb1d18c156e) **fix:** Consume body of 304 response
+
+
 ### 2.1.2
 
 * Safer interval handling - **[@jkrems](https://github.com/jkrems)** [#31](https://github.com/groupon/shared-store/pull/31)
