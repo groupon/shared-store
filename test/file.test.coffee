@@ -78,9 +78,8 @@ describe 'fileContent', ->
     it 'fails with a helpful error message', ->
       checkError fileContent(@filename, watch: false), (error) =>
         assert.equal 'SyntaxError', error.name
-        assert.equal """
-          missing " in #{@filename}:3
-        """, error.message
+        assert.include 'missing "', error.message
+        assert.include "in #{@filename}:3", error.message
 
   describe 'a JSON file with syntax errors', ->
     before ->
@@ -91,6 +90,5 @@ describe 'fileContent', ->
     it 'fails with a helpful error message', ->
       checkError fileContent(@filename, watch: false), (error) =>
         assert.equal 'SyntaxError', error.name
-        assert.equal """
-          Unexpected string in #{@filename}
-        """, error.message
+        assert.include 'Unexpected string', error.message
+        assert.include "in #{@filename}", error.message

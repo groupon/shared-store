@@ -39,9 +39,29 @@ onInterval = (interval, load) ->
     if interval < 1000
       Observable.throw new Error "Interval has to be at least 1s: #{interval}ms"
     else
-      load().concat(
-        Observable.interval(interval).flatMap(load)
-      )
+      Observable.create (observer) ->
+        loadSubscription = timeoutHandle = null
+
+        dispose = ->
+          clearTimeout(timeoutHandle) if timeoutHandle
+          loadSubscription.dispose() if loadSubscription
+          loadSubscription = timeoutHandle = null
+
+        prepareNext = ->
+          dispose()
+          timeoutHandle = setTimeout runLoad, interval
+
+        runLoad = ->
+          dispose()
+          loadSubscription = load().subscribe(
+            observer.onNext.bind(observer),
+            observer.onError.bind(observer),
+            prepareNext
+          )
+
+        runLoad()
+
+        dispose
   else
     load()
 

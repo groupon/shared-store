@@ -57,6 +57,4 @@ describe 'Crash avoidance', ->
     env = _.extend { DEBUG: 'shared-store:cache' }, process.env
     execFile(childPath, [ @tmpDir ], { env })
       .then ([stdout, stderr]) ->
-        console.log stdout, stderr
-        assert.include 'Unexpected end of input', stderr
         assert.equal 'ok\n', stdout
