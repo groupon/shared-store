@@ -1,3 +1,9 @@
+### 2.1.4
+
+* Gracefully handle missing dir - **[@jkrems](https://github.com/jkrems)** [#33](https://github.com/groupon/shared-store/pull/33)
+  - [`571d011`](https://github.com/groupon/shared-store/commit/571d011cbcd00d0065d4034ed023d7301cccc090) **fix:** Gracefully handle missing dir
+
+
 ### 2.1.3
 
 * Consume body of 304 response - **[@jkrems](https://github.com/jkrems)** [#32](https://github.com/groupon/shared-store/pull/32)
