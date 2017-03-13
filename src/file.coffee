@@ -73,6 +73,14 @@ parserFromExtension = (filename) ->
     when '.cson' then partial(parseCSON, filename)
     else identity
 
+surroundingDirExists = (filename) ->
+  try
+    dirStat = fs.statSync path.dirname(filename)
+    return dirStat.isDirectory()
+  catch err
+    throw err if err.code != 'ENOENT'
+    false
+
 fileContent = (filename, options = {}) ->
   {defaultValue, watch, interval, parse, root: rootDir} = options
   filename = path.resolve rootDir, filename if rootDir?
@@ -98,7 +106,7 @@ fileContent = (filename, options = {}) ->
       .then wrap
       .catch isMissingError, returnDefault
 
-  if watch
+  if watch && surroundingDirExists(filename)
     load().concat fileChanges(filename).flatMap(load)
   else
     onInterval interval, load

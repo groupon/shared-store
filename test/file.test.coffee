@@ -69,6 +69,17 @@ describe 'fileContent', ->
         @changed.then ({data}) =>
           assert.deepEqual @updated, data
 
+  describe 'when the surrounding dir does not exist', ->
+    before ->
+      @filename = path.join os.tmpdir(), 'not-a-dir', 'some-file.cson'
+
+    it 'does not fail, just ignores the watch', ->
+      fileContent(@filename, watch: true, defaultValue: 42)
+        .take(2)
+        .toPromise()
+        .then (result) ->
+          assert.equal 42, result
+
   describe 'a CSON file with syntax errors', ->
     before ->
       @filename = path.join os.tmpdir(), 'some-file.cson'
