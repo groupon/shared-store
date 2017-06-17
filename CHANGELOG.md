@@ -1,3 +1,9 @@
+### 2.2.0
+
+* feat: add fileAlternativesContent() handler - **[@dbushong](https://github.com/dbushong)** [#34](https://github.com/groupon/shared-store/pull/34)
+  - [`0c8e56f`](https://github.com/groupon/shared-store/commit/0c8e56f16bcf30f908fe17ee9533564c8cbdbdd2) **feat:** add fileAlternativesContent() handler
+
+
 ### 2.1.4
 
 * Gracefully handle missing dir - **[@jkrems](https://github.com/jkrems)** [#33](https://github.com/groupon/shared-store/pull/33)
