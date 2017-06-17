@@ -141,6 +141,28 @@ Support for the following extensions is built in:
   If `watch` is enabled, `interval` is automatically disabled.
   Defaults to `0` (disabled).
 
+### `fileAlternativesContent([filename, ...], options)`
+
+```js
+var fileAlternativesContent = require('shared-store/file-alternatives');
+```
+
+An observable representing the content of a single file, chosen from among
+multiple alternatives.  All of the alternatives in the array argument are
+checked for existence.  Iff exactly one exists, it is passed along with
+`options` to `fileContent()`.  This is useful for multiple extensions:
+
+```js
+fileAlternativesContent(['some-file.cson', 'some-file.json'], options)
+```
+
+or for a legacy path location and a new path location:
+
+```js
+fileAlternativesContent([oldestPath, oldPath, currentPath], options)
+```
+
+If more than one or none of the paths exist, it is an error.
 
 ### `httpResource({fetch, interval})`
 
