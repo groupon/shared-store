@@ -61,8 +61,7 @@
   ],
   "files": [
     "lib",
-    "file.js",
-    "http.js"
+    "*.js"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
