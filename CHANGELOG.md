@@ -1,3 +1,9 @@
+### 2.2.1
+
+* fix: properly bundle all top-level js endpoints - **[@dbushong](https://github.com/dbushong)** [#35](https://github.com/groupon/shared-store/pull/35)
+  - [`89ded1c`](https://github.com/groupon/shared-store/commit/89ded1c4b0344cd57cbc23091a301b407adb5cd4) **fix:** properly bundle all top-level js endpoints
+
+
 ### 2.2.0
 
 * feat: add fileAlternativesContent() handler - **[@dbushong](https://github.com/dbushong)** [#34](https://github.com/groupon/shared-store/pull/34)
