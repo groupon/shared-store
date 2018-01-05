@@ -1,3 +1,10 @@
+### 2.2.2
+
+* Apply latest nlm generator - **[@markowsiak](https://github.com/markowsiak)** [#36](https://github.com/groupon/shared-store/pull/36)
+  - [`535aa21`](https://github.com/groupon/shared-store/commit/535aa21152e4b283d783daca04a860e8fd56feb3) **chore:** Apply latest nlm generator
+  - [`cf92a1e`](https://github.com/groupon/shared-store/commit/cf92a1e7b0ac80f409dc99aeb06e01a761e4e79a) **chore:** cleanup generator misses
+
+
 ### 2.2.1
 
 * fix: properly bundle all top-level js endpoints - **[@dbushong](https://github.com/dbushong)** [#35](https://github.com/groupon/shared-store/pull/35)
