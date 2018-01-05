@@ -7,7 +7,7 @@
   "homepage": "https://github.com/groupon/shared-store",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/groupon/shared-store"
+    "url": "https://github.com/groupon/shared-store"
   },
   "bugs": {
     "url": "https://github.com/groupon/shared-store/issues"

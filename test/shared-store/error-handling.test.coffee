@@ -14,6 +14,7 @@ describe 'SharedStore (error handling)', ->
         tmp.dir { unsafeCleanup: true }, (err, tmpDirParam) ->
           tmpDir = tmpDirParam
           done(err)
+        return
 
       it 'will return the error through callback', (done) ->
         thrownError = false
@@ -30,6 +31,7 @@ describe 'SharedStore (error handling)', ->
           assert.equal 'This throws!', err.message
           done()
         null
+        return
 
     describe 'with a cache', ->
       tmpDir = null
@@ -41,6 +43,7 @@ describe 'SharedStore (error handling)', ->
             loader: -> Observable.just {data: 'tastic'}
           store.init (storeErr, data) ->
             done(storeErr)
+        return
 
       it 'will return the cache through callback & getCurrent', (done) ->
         thrownError = false
@@ -57,6 +60,7 @@ describe 'SharedStore (error handling)', ->
           assert.equal null, err
           done()
         null
+        return
 
   describe 'reading from a loader that throws an error after a successful read', ->
     tmpDir = null
@@ -64,6 +68,7 @@ describe 'SharedStore (error handling)', ->
       tmp.dir { unsafeCleanup: true }, (err, tmpDirParam) ->
         tmpDir = tmpDirParam
         done(err)
+      return
 
     it 'will return the error through event handler', (done) ->
       thrownError = false
@@ -84,3 +89,4 @@ describe 'SharedStore (error handling)', ->
       store.on 'err', (err) ->
         assert.equal '¡Ay, caramba!', err.message
         done()
+      return

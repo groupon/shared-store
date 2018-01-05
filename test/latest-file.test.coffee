@@ -26,6 +26,7 @@ describe 'latestFile', ->
   before (done) ->
     @dir = path.join os.tmpdir(), DIR_NAME
     rimraf @dir, -> done()
+    return
 
   describe 'with non-existant directory', ->
     before ->

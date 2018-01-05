@@ -9,6 +9,7 @@ SharedStore = require '../../'
 describe 'SharedStore (retry functionality)', ->
   before (done) ->
     tmp.dir { unsafeCleanup: true }, (err, @tmpDir) => done(err)
+    return
 
   describe 'reading from a loader with a single value', ->
     store = null
@@ -28,3 +29,4 @@ describe 'SharedStore (retry functionality)', ->
 
       assert.equal 2, metaCount
       done()
+      return
