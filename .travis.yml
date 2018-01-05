@@ -10,8 +10,3 @@ deploy:
     'on':
       branch: master
       node: 8.9.0
-before_install:
-  - npm install -g npm@latest-2
-before_deploy:
-  - git config --global user.email "opensource@groupon.com"
-  - git config --global user.name "Groupon"
