@@ -22,6 +22,7 @@ describe 'Crash recovery', ->
   before (done) ->
     process.setMaxListeners(99) # repeated process.on('exit') blab warnings
     tmp.dir { unsafeCleanup: true }, (err, @tmpDir) => done(err)
+    return
 
   before ->
     # Write known broken config
@@ -47,6 +48,7 @@ describe 'Crash avoidance', ->
   before (done) ->
     process.setMaxListeners(99) # repeated process.on('exit') blab warnings
     tmp.dir { unsafeCleanup: true }, (err, @tmpDir) => done(err)
+    return
 
   before ->
     # Write invalid JSON config

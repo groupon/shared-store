@@ -2,12 +2,16 @@
   "name": "shared-store",
   "version": "2.2.1",
   "description": "Keeping config data in sync",
-  "license": "BSD-3-Clause",
+  "license": {
+    "files": [
+      "src"
+    ]
+  },
   "main": "lib/shared-store.js",
   "homepage": "https://github.com/groupon/shared-store",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/groupon/shared-store"
+    "url": "https://github.com/groupon/shared-store"
   },
   "bugs": {
     "url": "https://github.com/groupon/shared-store/issues"

@@ -25,6 +25,7 @@ CHANGED_DATA =
 describe 'SharedStore', ->
   before (done) ->
     tmp.dir { unsafeCleanup: true }, (err, @tmpDir) => done(err)
+    return
 
   describe 'reading from multiple loaders', ->
     before (done) ->
@@ -35,6 +36,7 @@ describe 'SharedStore', ->
       fs.writeFile(
         @overrideFile, JSON.stringify(@initialOverrides), done
       )
+      return
 
     before (done) ->
       @store = new SharedStore {
@@ -51,6 +53,7 @@ describe 'SharedStore', ->
       }
       @store.init opt: 'value', (err, @initCallbackData) => done(err)
       null
+      return
 
     it 'returns the initial data', ->
       assert.deepEqual INITIAL_DATA, @store.getCurrent()
@@ -82,6 +85,7 @@ describe 'SharedStore', ->
           assert.deepEqual({ static: 'data' }, @passiveStore.getCurrent())
           done()
         ), 300
+        return
 
     describe 'after changing a file', ->
       before (done) ->
@@ -89,6 +93,7 @@ describe 'SharedStore', ->
         fs.writeFile(
           @overrideFile, JSON.stringify(@newOverrides), done
         )
+        return
 
       before (done) -> setTimeout done, 300
 
