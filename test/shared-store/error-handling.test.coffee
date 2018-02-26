@@ -4,6 +4,10 @@ assert = require 'assertive'
 {Observable} = require 'rx'
 tmp = require 'tmp'
 
+{promisify} = require 'bluebird'
+childProcess = require 'child_process'
+execFile = promisify childProcess.execFile, multiArgs: true
+
 SharedStore = require '../../'
 
 describe 'SharedStore (error handling)', ->
@@ -35,7 +39,9 @@ describe 'SharedStore (error handling)', ->
 
     describe 'with a cache', ->
       tmpDir = null
+      childPath = null
       before (done) ->
+        childPath = "#{__dirname}/file-store-with-cache"
         tmp.dir { unsafeCleanup: true }, (err, tmpDirParam) ->
           tmpDir = tmpDirParam
           store = new SharedStore
@@ -45,21 +51,14 @@ describe 'SharedStore (error handling)', ->
             done(storeErr)
         return
 
-      it 'will return the cache through callback & getCurrent', (done) ->
-        thrownError = false
-        store = new SharedStore
-          temp: tmpDir
-          loader: Observable.create (observer) ->
-            return if thrownError
-            observer.onError new Error 'This throws!'
-            thrownError = true
-
-        store.init (err, data) ->
-          assert.equal 'tastic', data
-          assert.equal 'tastic', store.getCurrent()
-          assert.equal null, err
-          done()
-        null
+      it 'warns about Syntax Error and returns cache through callback & getCurrent', (done) ->
+        execFile(childPath, [ tmpDir ])
+          .then ([stdout, stderr]) ->
+            assert.include 'Syntax Error', stderr
+            assert.include 'data: tastic', stdout
+            assert.include 'getCurrent: tastic', stdout
+            assert.include 'err: null', stdout
+          .finally(done)
         return
 
   describe 'reading from a loader that throws an error after a successful read', ->

@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+'use strict'
+
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+const {promisify} = require('bluebird');
+const writeFile = promisify(fs.writeFile);
+
+const SharedStore = require('../../');
+const fileContent = require('../../lib/file');
+
+const filename = path.join(os.tmpdir(), 'some-file.cson');
+writeFile(filename, "cson with 'syntax error");
+
+const store = new SharedStore({
+  temp: process.argv[2],
+  loader: fileContent(filename, {watch: false}),
+});
+
+store.init(function(err, data) {
+  console.log('data: ' + data);
+  console.log('getCurrent: ' + store.getCurrent())
+  console.log('err: ' + err);
+  process.exit(0);
+});

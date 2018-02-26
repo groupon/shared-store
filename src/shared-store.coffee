@@ -90,6 +90,13 @@ class SharedStore extends EventEmitter
 
       handleErr = (err) =>
         @removeListener 'data', handleData
+        if err instanceof SyntaxError
+          console.warn """
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Syntax Error: #{err.message}
+            Falling back to cache.
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            """
         latestCacheFile(@_temp).subscribe(
           (cache) =>
             @_handleUpdate cache
