@@ -36,7 +36,7 @@ path = require 'path'
 fs = require 'fs'
 
 {Observable} = require 'rx'
-{promisify} = require 'bluebird'
+promisify = require 'util.promisify'
 {extend} = require 'lodash'
 debug = require('debug') 'shared-store:dir-content'
 
@@ -47,6 +47,9 @@ readdir = promisify fs.readdir
 
 niceStat = (props, absolute) ->
   stat(absolute).then (info) -> extend(info, props)
+
+unexpectedError = (err) ->
+  process.nextTick () -> throw err
 
 dirChanges = (dir, {statFiles} = {}) ->
   statFiles ?= false
@@ -70,12 +73,13 @@ dirChanges = (dir, {statFiles} = {}) ->
 
       if statFiles
         niceStat(props, absolute)
-          .done onNext, (error) ->
+          .then onNext, (error) ->
             # This happens on file deletions and is fine.
-            code = error.cause?.code
+            code = error.code
             debug 'stat failed: %s', code, filename
             return if code == 'ENOENT'
             onError error
+          .catch unexpectedError
       else
         onNext props
 
@@ -84,12 +88,15 @@ dirChanges = (dir, {statFiles} = {}) ->
       watcher.close()
     return dispose
 
+promiseMap = (handler) -> (arr) ->
+  Promise.all arr.map handler
+
 dirContent = (dir, {watch, statFiles} = {}) ->
   statFiles ?= false
   watch ?= false
 
   statDir = ->
-    readdir(dir).map (filename) ->
+    readdir(dir).then promiseMap (filename) ->
       absolute = path.join dir, filename
       props = { filename, absolute }
 

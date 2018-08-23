@@ -37,7 +37,6 @@ cluster = require 'cluster'
 {EventEmitter} = require 'events'
 
 {Observable} = require 'rx'
-Bluebird = require 'bluebird'
 freeze = require 'deep-freeze'
 
 {cachedLoader, latestCacheFile} = require './cache'
@@ -46,6 +45,15 @@ safeMerge = require './safe-merge'
 RETRY_MULTIPLIER = 2
 TEN_SECONDS = 1000 * 10
 TEN_MINUTES = 1000 * 60 * 10
+
+unexpectedError = (err) ->
+  process.nextTick () -> throw err
+
+callbackify = (p, callback) ->
+  return p unless 'function' == typeof callback
+  p
+    .then callback.bind(null, null), callback
+    .catch unexpectedError
 
 class SharedStore extends EventEmitter
   constructor: ({loader, temp, active}) ->
@@ -81,7 +89,7 @@ class SharedStore extends EventEmitter
       callback = options
       options = {}
 
-    result = new Bluebird (resolve, reject) =>
+    result = new Promise (resolve, reject) =>
       return resolve @_cache.data if @_cache?
 
       handleData = (data) =>
@@ -103,7 +111,7 @@ class SharedStore extends EventEmitter
 
     @emit 'meta', options
 
-    result.nodeify callback
+    callbackify result, callback
 
   _createMeta: ->
     @_metaObserver = null

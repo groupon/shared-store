@@ -7,7 +7,7 @@ fs = require 'fs'
 assert = require 'assertive'
 rimraf = require 'rimraf'
 mkdirp = require 'mkdirp'
-{promisify} = Bluebird = require 'bluebird'
+promisify = require 'util.promisify'
 
 latestFile = require '../lib/latest-file'
 
@@ -16,6 +16,9 @@ checkError = require './check-error'
 writeFile = promisify fs.writeFile
 
 DIR_NAME = 'shared-store-latest-file-test'
+
+delay = (ms) ->
+  new Promise (resolve) -> setTimeout(resolve, ms)
 
 dotJSON = ({filename}) -> /\.json$/.test filename
 
@@ -36,7 +39,7 @@ describe 'latestFile', ->
 
     it 'fails', ->
       checkError @resource, (error) ->
-        assert.equal 'ENOENT', error.cause.code
+        assert.equal 'ENOENT', error.code
 
   describe 'an existing directory', ->
     before (done) -> mkdirp(@dir, done)
@@ -54,13 +57,16 @@ describe 'latestFile', ->
     describe 'with two files', ->
       before ->
         @timeout 3000
-        Bluebird.each [
-          'first.json', 'second.json'
-        ], (filename) =>
+
+        writeTestFile = (filename) =>
           absolute = path.join @dir, filename
           content = JSON.stringify {filename}
-          # .delay to ensure different mtime
-          writeFile(absolute, content).delay 1050
+          # delay to ensure different mtime
+          writeFile(absolute, content)
+            .then -> delay 1050
+
+        writeTestFile('first.json')
+          .then writeTestFile.bind(null, 'second.json')
 
       before ->
         @resource = latestFile(@dir, {
@@ -86,7 +92,7 @@ describe 'latestFile', ->
           filename = 'third.json'
           absolute = path.join @dir, filename
           writeFile absolute, JSON.stringify {filename}
-            .delay 100 # race condition protection
+            .then -> delay 100 # race condition protection
 
         it 'emits the third file', ->
           @additional.then (results) ->

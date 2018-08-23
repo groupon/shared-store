@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-var Bluebird = require('bluebird');
-
 var SharedStore = require('../');
 var httpResource = require('../lib/http');
 
 function fetchData(headers) {
-  return Bluebird.resolve({
+  return Promise.resolve({
     url: 'http://my-url',
     response: {
       headers: {
@@ -16,7 +14,12 @@ function fetchData(headers) {
       }
     },
     body: { incoming: headers, crashing: false }
-  }).delay(1000); // delay to ensure temp reads are faster
+  }).then(value => {
+    return new Promise((resolve) => {
+      // delay to ensure temp reads are faster
+      setTimeout(resolve, 1000, value);
+    });
+  });
 }
 
 var options = {
@@ -27,12 +30,17 @@ var options = {
   }
 };
 
+function unexpectedError(err) {
+  process.nextTick(() => { throw err; });
+}
+
 new SharedStore(options).init({})
-  .done(function(config) {
+  .then(function(config) {
     if (config.crashing) {
       throw new Error('Expected crash')
     } else {
       console.log('ok');
       process.exit(0);
     }
-  });
+  })
+  .catch(unexpectedError);

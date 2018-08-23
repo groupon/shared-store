@@ -1,7 +1,6 @@
 'use strict'
 
 assert = require 'assertive'
-Bluebird = require 'bluebird'
 
 httpResource = require '../lib/http'
 
@@ -18,7 +17,7 @@ describe 'httpResource', ->
     beforeEach ->
       @resource = httpResource {
         fetch: ->
-          Bluebird.reject new Error 'Fetch failed'
+          Promise.reject new Error 'Fetch failed'
       }
 
     it 'forwards the error', ->
@@ -34,7 +33,7 @@ describe 'httpResource', ->
       @resource = httpResource {
         fetch: (headers) =>
           ++@fetchCount
-          Bluebird.resolve {
+          Promise.resolve {
             url: 'http://my-url'
             response:
               headers: {
