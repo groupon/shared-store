@@ -1,3 +1,19 @@
+### 3.0.0
+
+#### Breaking Changes
+
+None of the methods return Bluebird promises anymore.
+If a consumer of this library depends on it, they need to refactor
+to use native promise-based solutions.
+
+*See: [`5f22f8c`](https://github.com/groupon/shared-store/commit/5f22f8c80831e5531a4deb49d7835f7ca4f51500)*
+
+#### Commits
+
+* Remove bluebird dependency - **[@jkrems](https://github.com/jkrems)** [#38](https://github.com/groupon/shared-store/pull/38)
+  - [`5f22f8c`](https://github.com/groupon/shared-store/commit/5f22f8c80831e5531a4deb49d7835f7ca4f51500) **refactor:** Remove bluebird dependency
+
+
 ### 2.2.2
 
 * Apply latest nlm generator - **[@markowsiak](https://github.com/markowsiak)** [#36](https://github.com/groupon/shared-store/pull/36)
