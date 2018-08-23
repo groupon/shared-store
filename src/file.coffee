@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 fs = require 'fs'
 path = require 'path'
 
-{promisify} = Bluebird = require 'bluebird'
+promisify = require 'util.promisify'
 {partial, identity} = require 'lodash'
 CSON = require 'cson-parser'
 debug = require('debug') 'shared-store:file'
@@ -51,7 +51,7 @@ fileChanges = (filename, options) ->
     .filter ({absolute}) -> absolute == filename
 
 isMissingError = (error) ->
-  error.cause && error.cause.code == 'ENOENT'
+  error.code == 'ENOENT'
 
 parseCSON = (filename, content) ->
   try
@@ -81,6 +81,10 @@ surroundingDirExists = (filename) ->
     throw err if err.code != 'ENOENT'
     false
 
+tap = (fn) -> (value) ->
+  fn(value)
+  value
+
 fileContent = (filename, options = {}) ->
   {defaultValue, watch, interval, parse, root: rootDir} = options
   filename = path.resolve rootDir, filename if rootDir?
@@ -89,8 +93,8 @@ fileContent = (filename, options = {}) ->
   debug 'fileContent, watch: %j', !!watch, filename
 
   returnDefault = (error) ->
-    if hasDefault then defaultValue
-    else Bluebird.reject error
+    if isMissingError(error) && hasDefault then defaultValue
+    else Promise.reject error
 
   loaded = (content) ->
     debug 'Parsing %j', content
@@ -101,10 +105,10 @@ fileContent = (filename, options = {}) ->
   load = partial fromPromiseFunction, ->
     debug 'readFile %s', filename
     readFile(filename, 'utf8')
-      .tap loaded
+      .then tap loaded
       .then parse
       .then wrap
-      .catch isMissingError, returnDefault
+      .catch returnDefault
 
   if watch && surroundingDirExists(filename)
     load().concat fileChanges(filename).flatMap(load)

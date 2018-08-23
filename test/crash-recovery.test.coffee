@@ -4,14 +4,19 @@ fs = require 'fs'
 childProcess = require 'child_process'
 
 assert = require 'assertive'
-{promisify} = require 'bluebird'
+promisify = require 'util.promisify'
 tmp = require 'tmp'
 _ = require 'lodash'
 
 {timestampName} = require '../lib/cache'
 
 writeFile = promisify fs.writeFile
-execFile = promisify childProcess.execFile, multiArgs: true
+
+execFile = (args...) ->
+  new Promise (resolve, reject) ->
+    childProcess.execFile args..., (err, stdout, stderr) ->
+      return reject err if err
+      resolve { stdout, stderr }
 
 childPath = "#{__dirname}/crashing"
 
@@ -40,7 +45,7 @@ describe 'Crash recovery', ->
 
   it 'succeeds on retry', ->
     execFile(childPath, [ @tmpDir ])
-      .then ([stdout, stderr]) ->
+      .then ({ stdout, stderr }) ->
         assert.equal '', stderr
         assert.equal 'ok\n', stdout
 
@@ -58,5 +63,5 @@ describe 'Crash avoidance', ->
   it 'starts up anyway', ->
     env = _.extend { DEBUG: 'shared-store:cache' }, process.env
     execFile(childPath, [ @tmpDir ], { env })
-      .then ([stdout, stderr]) ->
+      .then ({ stdout, stderr }) ->
         assert.equal 'ok\n', stdout

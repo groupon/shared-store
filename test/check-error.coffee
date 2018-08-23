@@ -11,6 +11,7 @@ checkError = (observable, fn) ->
       fn(err)
       Observable.just OK
     .toPromise()
-    .then (value) -> assert.equal OK, value
+    .then (value) ->
+      assert.equal OK, value
 
 module.exports = checkError

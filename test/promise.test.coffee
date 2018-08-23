@@ -1,7 +1,6 @@
 'use strict'
 
 assert = require 'assertive'
-Bluebird = require 'bluebird'
 {Observable} = require 'rx'
 
 {fromPromiseFunction} = require '../lib/promise'
@@ -17,7 +16,7 @@ describe 'fromPromiseFunction', ->
       .then (value) -> assert.deepEqual expected, value
 
   it 'handles rejections', ->
-    fromPromiseFunction -> Bluebird.reject(new Error 'Bad')
+    fromPromiseFunction -> Promise.reject(new Error 'Bad')
       .catch (err) ->
         assert.equal 'Bad', err.message
         Observable.just 'ok'

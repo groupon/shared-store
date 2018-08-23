@@ -5,13 +5,13 @@ path = require 'path'
 os = require 'os'
 
 assert = require 'assertive'
-Bluebird = require 'bluebird'
+promisify = require 'util.promisify'
 
 fileAlternativesContent = require '../lib/file-alternatives'
 
 checkError = require './check-error'
 
-writeFile = Bluebird.promisify fs.writeFile
+writeFile = promisify fs.writeFile
 
 describe 'fileAlternativesContent', ->
   it 'is a function', ->
@@ -50,7 +50,7 @@ describe 'fileAlternativesContent', ->
       @filename1 = path.join os.tmpdir(), 'some-file.json'
       @filename2 = path.join os.tmpdir(), 'other-file.json'
       @initialContent = initial: 'state'
-      Bluebird.map [@filename1, @filename2], (filename) =>
+      Promise.all [@filename1, @filename2].map (filename) =>
         writeFile filename, JSON.stringify @initialContent
 
     it 'dies horribly', ->

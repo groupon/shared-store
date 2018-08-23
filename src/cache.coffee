@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 path = require 'path'
 fs = require 'fs'
 
-{promisify} = require 'bluebird'
+promisify = require 'util.promisify'
 {Observable} = require 'rx'
 mkdirp = require 'mkdirp'
 {isEqual, property, partial} = require 'lodash'

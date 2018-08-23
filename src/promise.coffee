@@ -33,13 +33,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 'use strict'
 
 {Observable, config} = require 'rx'
-Bluebird = require 'bluebird'
 
-config.Promise ?= Bluebird
+unexpectedError = (err) ->
+  process.nextTick () -> throw err
 
 fromPromiseFunction = (fn) ->
   Observable.create (observer) ->
-    p = Bluebird.try fn
+    p = new Promise (resolve) -> resolve(fn())
 
     onResolved = (value) ->
       observer.onNext value
@@ -47,6 +47,8 @@ fromPromiseFunction = (fn) ->
     onRejected = (error) ->
       observer.onError error
 
-    p.done onResolved, onRejected
+    p
+      .then onResolved, onRejected
+      .catch unexpectedError
 
 module.exports = {fromPromiseFunction}

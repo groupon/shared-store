@@ -5,7 +5,7 @@ path = require 'path'
 os = require 'os'
 
 assert = require 'assertive'
-{promisify} = require 'bluebird'
+promisify = require 'util.promisify'
 CSON = require 'cson-parser'
 
 fileContent = require '../lib/file'
@@ -21,7 +21,7 @@ describe 'fileContent', ->
   it 'fails when the file does not exist', ->
     filename = path.join os.tmpdir(), 'missing.json'
     checkError fileContent(filename, watch: false), (error) ->
-      assert.equal 'ENOENT', error.cause.code
+      assert.equal 'ENOENT', error.code
 
   describe 'a CSON file', ->
     before ->
