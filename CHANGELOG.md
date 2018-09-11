@@ -1,3 +1,9 @@
+### 3.1.0
+
+* Allow skipping all tmp files - **[@jkrems](https://github.com/jkrems)** [#39](https://github.com/groupon/shared-store/pull/39)
+  - [`ebf18c1`](https://github.com/groupon/shared-store/commit/ebf18c1d39172d5710f8edc84d6e2f9cdd2841c2) **feat:** Allow skipping all tmp files
+
+
 ### 3.0.0
 
 #### Breaking Changes

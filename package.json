@@ -1,6 +1,6 @@
 {
   "name": "shared-store",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Keeping config data in sync",
   "license": "BSD-3-Clause",
   "main": "lib/shared-store.js",
