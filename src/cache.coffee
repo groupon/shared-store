@@ -108,13 +108,20 @@ tryCache = (tmpDir) ->
       else
         Observable.throw error
 
-activeLoader = (meta, loader, tmpDir) ->
+activeLoader = (meta, loader, tmpDir, writeCacheFiles) ->
   rawData = meta
     .flatMapLatest(loader)
     .map (otherData) ->
       otherData.usingCache = false
       otherData
 
+  unless writeCacheFiles
+    debug 'skip writing a cache, returning raw data stream'
+    return rawData
+      .distinctUntilChanged property('data'), isEqual
+      .publish()
+
+  debug 'wrapping data stream in cache', { tmpDir }
   {onDataLoaded, tearDownCrashHandler} = crashRecovery tmpDir
 
   data = rawData.tap(
@@ -134,11 +141,11 @@ activeLoader = (meta, loader, tmpDir) ->
 passiveLoader = (tmpDir) ->
   latestCacheFile(tmpDir, true).publish()
 
-@cachedLoader = (meta, loader, tmpDir, active) ->
+@cachedLoader = (meta, loader, tmpDir, active, writeCacheFiles = true) ->
   debug 'cachedLoader(%j)', active
 
   loader = if active
-    activeLoader(meta, loader, tmpDir)
+    activeLoader(meta, loader, tmpDir, writeCacheFiles)
   else
     passiveLoader(tmpDir)
 

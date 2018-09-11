@@ -67,15 +67,19 @@ class SharedStore extends EventEmitter
     @_createStream = =>
       @subscription?.dispose()
       meta = @_createMeta()
-      @stream = cachedLoader meta, loader, @_temp, @_active
+      @stream = cachedLoader meta, loader, @_temp, @_active, @_writeCacheFiles
       @subscription = @stream.subscribe @_handleUpdate, @_handleError
     @_createStream()
 
     @on 'meta', @_handleMetaUpdate
     @_cache = null
+    @_writeCacheFiles = !!@_active
     @_retryTimeout = TEN_SECONDS
 
-  setActive: (@_active=true) ->
+  setActive: (isActive = true) ->
+    @_active = !!isActive
+    if isActive && typeof isActive.writeCacheFiles == 'boolean'
+      @_writeCacheFiles = isActive.writeCacheFiles
     @_createStream()
 
   getCurrent: ->
