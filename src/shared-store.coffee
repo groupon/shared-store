@@ -76,7 +76,7 @@ class SharedStore extends EventEmitter
     @_writeCacheFiles = !!@_active
     @_retryTimeout = TEN_SECONDS
 
-  setActive: (isActive = true) ->
+  setActive: (isActive = { writeCacheFiles: true }) ->
     @_active = !!isActive
     if isActive && typeof isActive.writeCacheFiles == 'boolean'
       @_writeCacheFiles = isActive.writeCacheFiles
