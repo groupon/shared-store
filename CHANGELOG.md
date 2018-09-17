@@ -1,3 +1,9 @@
+### 3.1.1
+
+* default `setActive()` to write cache files - **[@dbushong](https://github.com/dbushong)** [#40](https://github.com/groupon/shared-store/pull/40)
+  - [`70fb4ea`](https://github.com/groupon/shared-store/commit/70fb4eae8937521abe99cacde9da701dfc5bc9e9) **fix:** default `setActive()` to write cache files
+
+
 ### 3.1.0
 
 * Allow skipping all tmp files - **[@jkrems](https://github.com/jkrems)** [#39](https://github.com/groupon/shared-store/pull/39)
