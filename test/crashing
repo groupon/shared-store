@@ -1,8 +1,9 @@
 #!/usr/bin/env node
+
 'use strict';
 
-var SharedStore = require('../');
-var httpResource = require('../lib/http');
+const SharedStore = require('../');
+const httpResource = require('../lib/http');
 
 function fetchData(headers) {
   return Promise.resolve({
@@ -10,36 +11,41 @@ function fetchData(headers) {
     response: {
       headers: {
         'last-modified': new Date().toString(),
-        'etag': 'some-etag'
-      }
+        etag: 'some-etag',
+      },
     },
-    body: { incoming: headers, crashing: false }
+    body: { incoming: headers, crashing: false },
   }).then(value => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       // delay to ensure temp reads are faster
       setTimeout(resolve, 1000, value);
     });
   });
 }
 
-var options = {
+const options = {
   temp: process.argv[2],
   active: true,
-  loader: function(baseConfig) {
+  loader() {
     return httpResource({ fetch: fetchData });
-  }
+  },
 };
 
 function unexpectedError(err) {
-  process.nextTick(() => { throw err; });
+  process.nextTick(() => {
+    throw err;
+  });
 }
 
-new SharedStore(options).init({})
-  .then(function(config) {
+new SharedStore(options)
+  .init({})
+  .then(config => {
     if (config.crashing) {
-      throw new Error('Expected crash')
+      throw new Error('Expected crash');
     } else {
+      // eslint-disable-next-line no-console
       console.log('ok');
+      // eslint-disable-next-line no-process-exit
       process.exit(0);
     }
   })
