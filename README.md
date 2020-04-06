@@ -144,7 +144,7 @@ Support for the following extensions is built in:
 ### `fileAlternativesContent([filename, ...], options)`
 
 ```js
-var fileAlternativesContent = require('shared-store/file-alternatives');
+const fileAlternativesContent = require('shared-store/file-alternatives');
 ```
 
 An observable representing the content of a single file, chosen from among
@@ -167,7 +167,7 @@ If more than one or none of the paths exist, it is an error.
 ### `httpResource({fetch, interval})`
 
 ```js
-var httpResource = require('shared-store/http');
+const httpResource = require('shared-store/http');
 ```
 
 An observable representing a cacheable HTTP resource.
