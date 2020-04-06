@@ -53,8 +53,8 @@ describe('latestFile', () => {
     });
   });
   describe('an existing directory', () => {
-    before(function (done) {
-      mkdirp(this.dir, done);
+    before(function () {
+      return mkdirp(this.dir);
     });
     describe('without any files', () => {
       before(function () {
