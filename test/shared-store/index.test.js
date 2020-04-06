@@ -28,33 +28,41 @@ const CHANGED_DATA = {
   static: 'data',
   fromFile: 13,
 };
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 describe('SharedStore', () => {
-  before(function (done) {
+  let tmpDir;
+  before(done => {
     tmp.dir(
       {
         unsafeCleanup: true,
       },
-      (err, tmpDir) => {
-        this.tmpDir = tmpDir;
+      (err, dir) => {
+        tmpDir = dir;
         done(err);
       }
     );
   });
+
   describe('reading from multiple loaders', () => {
-    before(function (done) {
-      this.overrideFile = path.join(os.tmpdir(), 'shared-store.test.json');
-      this.initialOverrides = {
+    let store;
+    let overrideFile;
+    let initCallbackData;
+
+    before(done => {
+      overrideFile = path.join(os.tmpdir(), 'shared-store.test.json');
+      const initialOverrides = {
         override: 'loaded',
       };
-      fs.writeFile(
-        this.overrideFile,
-        JSON.stringify(this.initialOverrides),
-        done
-      );
+      fs.writeFile(overrideFile, JSON.stringify(initialOverrides), done);
     });
-    before(function (done) {
-      this.store = new SharedStore({
-        temp: this.tmpDir,
+
+    before(async () => {
+      store = new SharedStore({
+        temp: tmpDir,
         active: true,
         loader: baseConfig => {
           assert.deepEqual(BASE_CONFIG, baseConfig);
@@ -66,38 +74,38 @@ describe('SharedStore', () => {
               source: 'static',
             }),
             fileContent('example/config.json'),
-            fileContent(this.overrideFile, {
+            fileContent(overrideFile, {
               watch: true,
             }),
             SharedStore.safeMerge
           );
         },
       });
-      this.store.init(
-        {
-          opt: 'value',
-        },
-        (err, initCallbackData) => {
-          this.initCallbackData = initCallbackData;
-          done(err);
-        }
-      );
-      null;
+
+      initCallbackData = await store.init({
+        opt: 'value',
+      });
     });
-    it('returns the initial data', function () {
-      assert.deepEqual(INITIAL_DATA, this.store.getCurrent());
+
+    it('returns the initial data', () => {
+      assert.deepEqual(INITIAL_DATA, store.getCurrent());
     });
-    it('passes the initial data into the callback', function () {
-      assert.deepEqual(INITIAL_DATA, this.initCallbackData);
+
+    it('passes the initial data into the callback', () => {
+      assert.deepEqual(INITIAL_DATA, initCallbackData);
     });
-    it('writes a cache file', function () {
-      const cacheFiles = fs.readdirSync(this.tmpDir);
+
+    it('writes a cache file', () => {
+      const cacheFiles = fs.readdirSync(tmpDir);
+
       assert.equal(1, cacheFiles.length);
     });
+
     describe('a passive store', () => {
-      before(function () {
-        this.passiveStore = new SharedStore({
-          temp: this.tmpDir,
+      let passiveStore;
+      before(async () => {
+        passiveStore = new SharedStore({
+          temp: tmpDir,
           active: false,
           loader: Observable.just({
             data: {
@@ -106,42 +114,35 @@ describe('SharedStore', () => {
             source: 'static',
           }),
         });
-        return this.passiveStore.init({
+
+        await passiveStore.init({
           opt: '-- ignored --',
         });
       });
-      it('gets the same data', function () {
-        assert.deepEqual(INITIAL_DATA, this.passiveStore.getCurrent());
+
+      it('gets the same data', () => {
+        assert.deepEqual(INITIAL_DATA, passiveStore.getCurrent());
       });
-      it('can switch to active', function (done) {
-        this.passiveStore.setActive();
-        setTimeout(() => {
-          assert.deepEqual(
-            {
-              static: 'data',
-            },
-            this.passiveStore.getCurrent()
-          );
-          done();
-        }, 300);
+
+      it('can switch to active', async () => {
+        passiveStore.setActive();
+        await delay(300);
+
+        assert.deepEqual({ static: 'data' }, passiveStore.getCurrent());
       });
     });
+
     describe('after changing a file', () => {
-      before(function (done) {
-        this.newOverrides = {
+      before(done => {
+        const newOverrides = {
           fromFile: CHANGED_DATA.fromFile,
         };
-        fs.writeFile(
-          this.overrideFile,
-          JSON.stringify(this.newOverrides),
-          done
-        );
+        fs.writeFile(overrideFile, JSON.stringify(newOverrides), done);
       });
-      before(done => {
-        setTimeout(done, 300);
-      });
-      it('has the updated data', function () {
-        assert.deepEqual(CHANGED_DATA, this.store.getCurrent());
+      before(() => delay(300));
+
+      it('has the updated data', () => {
+        assert.deepEqual(CHANGED_DATA, store.getCurrent());
       });
     });
   });

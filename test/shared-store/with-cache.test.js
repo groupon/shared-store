@@ -18,6 +18,7 @@ function delay(ms) {
 
 describe('SharedStore (with data already in cache)', () => {
   let cacheTmpDir = null;
+
   beforeEach(() =>
     tmpDir({
       unsafeCleanup: true,
@@ -32,9 +33,11 @@ describe('SharedStore (with data already in cache)', () => {
       return store.init();
     })
   );
+
   describe('taking a long time to load data', () => {
     let store;
-    let notSoCurrent = (store = null);
+    let notSoCurrent;
+
     beforeEach(() => {
       store = new SharedStore({
         temp: cacheTmpDir,
@@ -44,17 +47,20 @@ describe('SharedStore (with data already in cache)', () => {
       });
       return store.init().then(current => {
         notSoCurrent = current;
-        return notSoCurrent;
       });
     });
+
     beforeEach(() => delay(1000));
+
     it('should return cached data immediately in callback', () => {
       assert.equal('some data', notSoCurrent);
     });
+
     it('should return latest data in getCurrent', () => {
       assert.equal('other data', store.getCurrent());
     });
   });
+
   describe('having cache data = loaded data', () => {
     let store = null;
     beforeEach(() => {
@@ -65,6 +71,7 @@ describe('SharedStore (with data already in cache)', () => {
         }),
       });
     });
+
     it("should resolve the promise even if there's a long period between construction & initialization", () =>
       delay(1000)
         .then(() => store.init())
@@ -72,12 +79,12 @@ describe('SharedStore (with data already in cache)', () => {
           assert.equal('some data', data);
         }));
   });
-  describe('throwing a load error & then producing a value', () => {
-    let thrownError;
-    let store = (thrownError = null);
-    beforeEach(() => {
-      thrownError = false;
 
+  describe('throwing a load error & then producing a value', () => {
+    let thrownError = false;
+    let store;
+
+    beforeEach(() => {
       const loader = () =>
         Observable.create(observer =>
           delay(250).then(() => {
@@ -99,11 +106,14 @@ describe('SharedStore (with data already in cache)', () => {
       });
       return store.init();
     });
-    it('will throw an error first', () => {
+
+    it('will throw an error first', done => {
       store.on('err', err => {
         assert.equal('kaboom!', err.message);
+        done();
       });
     });
+
     it('will keep on streaming after an error is thrown', () =>
       delay(1500).then(() => {
         assert.equal('2nd value', store.getCurrent());

@@ -95,7 +95,7 @@ describe('latestFile', () => {
       });
       after(function () {
         if (this._connection != null) {
-          return this._connection.dispose();
+          this._connection.dispose();
         }
       });
       before(function () {

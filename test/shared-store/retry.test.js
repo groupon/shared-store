@@ -9,39 +9,42 @@ const tmp = require('tmp');
 const SharedStore = require('../../');
 
 describe('SharedStore (retry functionality)', () => {
-  before(function (done) {
+  let tmpDir;
+  before(done => {
     tmp.dir(
       {
         unsafeCleanup: true,
       },
-      (err, tmpDir) => {
-        this.tmpDir = tmpDir;
+      (err, dir) => {
+        tmpDir = dir;
         done(err);
       }
     );
   });
+
   describe('reading from a loader with a single value', () => {
     let store = null;
-    before(function () {
+    before(() => {
       store = new SharedStore({
-        temp: this.tmpDir,
+        temp: tmpDir,
         loader: Observable.just({
           data: 'test',
         }),
       });
     });
-    it('init and retry will emit the same meta ', done => {
+
+    it('init and retry will emit the same meta ', async () => {
       let metaCount = 0;
       store.on('meta', options => {
         assert.equal('some-options', options);
-        return metaCount++;
+        metaCount++;
       });
-      store.init('some-options');
+
+      await store.init('some-options');
 
       store._retry();
 
       assert.equal(2, metaCount);
-      done();
     });
   });
 });
