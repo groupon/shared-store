@@ -42,7 +42,7 @@
     "rx": "^2.5.3"
   },
   "devDependencies": {
-    "assertive": "^2.1.0",
+    "assertive": "^5.0.0",
     "eslint": "^6.8.0",
     "eslint-config-groupon": "^9.0.0",
     "eslint-plugin-import": "^2.20.1",
@@ -50,10 +50,10 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-prettier": "^3.1.2",
     "mocha": "^7.1.1",
-    "nlm": "^3.6.3",
+    "nlm": "^4.2.0",
     "prettier": "^2.0.3",
-    "rimraf": "^2.2.8",
-    "tmp": "0.0.33"
+    "rimraf": "^3.0.2",
+    "tmp": "^0.1.0"
   },
   "author": {
     "name": "Groupon",
