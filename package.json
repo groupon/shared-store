@@ -35,11 +35,11 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "cson-parser": "^4.0.4",
-    "debug": "^2.1.1",
+    "debug": "^4.1.1",
     "deep-freeze": "0.0.1",
-    "lodash": "^4.6.1",
+    "lodash": "^4.17.15",
     "mkdirp": "^1.0.4",
-    "rx": "^2.3.22"
+    "rx": "^2.5.3"
   },
   "devDependencies": {
     "assertive": "^2.1.0",
