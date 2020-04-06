@@ -6,8 +6,6 @@ const fs = require('fs');
 
 const assert = require('assertive');
 
-const _ = require('lodash');
-
 const tmp = require('tmp');
 
 const { promisify } = require('util');
@@ -97,13 +95,11 @@ describe('Crash avoidance', () => {
     return writeFile(`${this.tmpDir}/${timestampName()}`, badJSON);
   });
   it('starts up anyway', function () {
-    const env = _.extend(
-      {
-        DEBUG: 'shared-store:cache',
-      },
-      process.env
-    );
+    const env = {
+      DEBUG: 'shared-store:cache',
 
+      ...process.env,
+    };
     return execFile(childPath, [this.tmpDir], {
       env,
     }).then(({ stdout }) => {
