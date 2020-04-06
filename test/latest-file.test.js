@@ -12,7 +12,7 @@ const mkdirp = require('mkdirp');
 
 const rimraf = require('rimraf');
 
-const promisify = require('util.promisify');
+const { promisify } = require('util');
 
 const latestFile = require('../lib/latest-file');
 

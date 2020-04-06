@@ -10,7 +10,7 @@ const assert = require('assertive');
 
 const CSON = require('cson-parser');
 
-const promisify = require('util.promisify');
+const { promisify } = require('util');
 
 const fileContent = require('../lib/file');
 

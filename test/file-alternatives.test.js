@@ -8,7 +8,7 @@ const path = require('path');
 
 const assert = require('assertive');
 
-const promisify = require('util.promisify');
+const { promisify } = require('util');
 
 const fileAlternativesContent = require('../lib/file-alternatives');
 

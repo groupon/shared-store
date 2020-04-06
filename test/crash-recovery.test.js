@@ -10,7 +10,7 @@ const _ = require('lodash');
 
 const tmp = require('tmp');
 
-const promisify = require('util.promisify');
+const { promisify } = require('util');
 
 const { timestampName } = require('../lib/cache');
 

@@ -6,11 +6,11 @@ const { Observable } = require('rx');
 
 const tmp = require('tmp');
 
-const promisify = require('util.promisify');
+const { promisify } = require('util');
 
 const SharedStore = require('../../');
 
-const tmpDir = promisify(tmp.dir, tmp);
+const tmpDir = promisify(tmp.dir);
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -20,34 +20,32 @@ describe('SharedStore (with data already in cache)', () => {
   let cacheTmpDir = null;
 
   beforeEach(() =>
-    tmpDir({
-      unsafeCleanup: true,
-    }).then(createdDir => {
-      cacheTmpDir = createdDir;
-      const store = new SharedStore({
-        temp: cacheTmpDir,
-        loader: Observable.just({
-          data: 'some data',
-        }),
-      });
-      return store.init();
-    })
+    tmpDir({ unsafeCleanup: true })
+      .then(createdDir => {
+        cacheTmpDir = createdDir;
+        return new SharedStore({
+          temp: cacheTmpDir,
+          loader: Observable.just({
+            data: 'some data',
+          }),
+        });
+      })
+      .then(store => store.init())
   );
 
   describe('taking a long time to load data', () => {
     let store;
     let notSoCurrent;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       store = new SharedStore({
         temp: cacheTmpDir,
         loader: Observable.just({
           data: 'other data',
         }).delay(500),
       });
-      return store.init().then(current => {
-        notSoCurrent = current;
-      });
+
+      notSoCurrent = await store.init();
     });
 
     beforeEach(() => delay(1000));
@@ -84,27 +82,28 @@ describe('SharedStore (with data already in cache)', () => {
     let thrownError = false;
     let store;
 
-    beforeEach(() => {
-      const loader = () =>
-        Observable.create(observer =>
-          delay(250).then(() => {
-            if (!thrownError) {
-              observer.onError(new Error('kaboom!'));
-              thrownError = true;
-              return;
-            }
+    const loader = () =>
+      Observable.create(observer =>
+        delay(250).then(() => {
+          if (!thrownError) {
+            observer.onError(new Error('kaboom!'));
+            thrownError = true;
+            return;
+          }
 
-            observer.onNext({
-              data: '2nd value',
-            });
-          })
-        );
+          observer.onNext({
+            data: '2nd value',
+          });
+        })
+      );
 
+    beforeEach(async () => {
       store = new SharedStore({
         temp: cacheTmpDir,
         loader,
       });
-      return store.init();
+
+      await store.init();
     });
 
     it('will throw an error first', done => {

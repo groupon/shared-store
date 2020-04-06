@@ -39,8 +39,7 @@
     "deep-freeze": "0.0.1",
     "lodash": "^4.6.1",
     "mkdirp": "^1.0.4",
-    "rx": "^2.3.22",
-    "util.promisify": "^1.0.0"
+    "rx": "^2.3.22"
   },
   "devDependencies": {
     "assertive": "^2.1.0",
