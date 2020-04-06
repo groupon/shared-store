@@ -42,7 +42,6 @@ describe('SharedStore (error handling)', () => {
           assert.equal('This throws!', err.message);
           done();
         });
-        null;
       });
     });
     describe('with a cache', () => {
@@ -88,7 +87,6 @@ describe('SharedStore (error handling)', () => {
           assert.equal(null, err);
           done();
         });
-        null;
       });
     });
   });
