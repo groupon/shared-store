@@ -28,31 +28,31 @@ The code below can be used in both master & child processes.  The master process
 fetch changes from the `temp` directory.
 
 ```js
-var SharedStore = require('shared-store');
-var fileContent = require('shared-store/file');
+const SharedStore = require('shared-store');
+const fileContent = require('shared-store/file');
 
-var store = new SharedStore({
+const store = new SharedStore({
   temp: 'tmp/config',
 
   loader(options) {
     return fileContent(options.filename, {
-      watch: true
+      watch: true,
     });
   }
 });
 
 // Load the initial configuration
-store.init({ filename: 'conf/application.json' }, (error, config) => {
-  if (error) throw error;
+store.init({ filename: 'conf/application.json' })
+  .then(config => {
 
-  // The `config` variable was passed into the callback for convenience
-  // purposes only.  If you want the latest data at any point, you can call:
-  var config = store.getCurrent();
+    // The `config` variable was passed into the callback for convenience
+    // purposes only.  If you want the latest data at any point, you can call:
+    const latestConfig = store.getCurrent();
 
-  var server = require('http').createServer((req, res) => {
-    res.end('ok');
-  }).listen(config.port);
-});
+    const server = require('http').createServer((req, res) => {
+      res.end('ok');
+    }).listen(latestConfig.port);
+  }).catch(err => { throw err });
 ```
 
 When loading fails, the store will fall back to the `temp` directory.
@@ -110,7 +110,7 @@ when combined with `Observable.combineLatest`.
 ### `fileContent(filename, options)`
 
 ```js
-var fileContent = require('shared-store/file');
+const fileContent = require('shared-store/file');
 ```
 
 An observable representing the content of a file.

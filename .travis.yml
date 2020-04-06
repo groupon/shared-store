@@ -5,7 +5,7 @@ node_js:
 deploy:
   provider: script
   script: npx nlm release
-  skip_cleanup: true
-  'on':
+  cleanup: true
+  on:
     branch: master
-    node: '12'
+    node_js: '12'
