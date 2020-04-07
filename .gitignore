@@ -1,6 +1,8 @@
-/package-lock.json
 /yarn.lock
 node_modules/
 /tmp
-.DS_Store
 npm-debug.log
+test/tmp
+test/log
+/.idea
+.nyc_output
