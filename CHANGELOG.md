@@ -1,3 +1,30 @@
+### 4.0.0 - 2020-04-07
+
+#### Breaking Changes
+
+- drop node 8 support due to dependencies
+
+*See: [`ad0263e`](https://github.com/groupon/shared-store/commit/ad0263e16033790f095d049c5699c5b728678218)*
+
+#### Commits
+
+* refactor: decaf, node 8 deprecation & package upgrades - **[@aaarichter](https://github.com/aaarichter)** [#41](https://github.com/groupon/shared-store/pull/41)
+  - [`da08155`](https://github.com/groupon/shared-store/commit/da081559157016869b0c257ec5dad9f419536806) **refactor:** decaf /test
+  - [`651472b`](https://github.com/groupon/shared-store/commit/651472b8a8e80cda33e0386f08e9a1f9ed5d273a) **refactor:** decaf /lib & improve tests
+  - [`99a61da`](https://github.com/groupon/shared-store/commit/99a61dac1422f1be6ddae539ab9d3844b1d03654) **refactor:** safeMerge()
+  - [`514a840`](https://github.com/groupon/shared-store/commit/514a840bb27cb30afb309a66eecec48a79e4147d) **chore:** upgrade cson-parser
+  - [`ad0263e`](https://github.com/groupon/shared-store/commit/ad0263e16033790f095d049c5699c5b728678218) **chore:** drop node 8 support & upgrade mkdirp
+  - [`84dcdd1`](https://github.com/groupon/shared-store/commit/84dcdd16e90829bf32c81fdd984e99487af92743) **refactor:** replace util.promisify with node promisify
+  - [`15ab806`](https://github.com/groupon/shared-store/commit/15ab8061ee729d8790197408db0be37ed6b087c8) **chore:** ugprade debug
+  - [`9ad2792`](https://github.com/groupon/shared-store/commit/9ad27927c46be953da6b4f6fb86c4e4430326bfc) **chore:** upgrade dev dependencies
+  - [`dd4cdc8`](https://github.com/groupon/shared-store/commit/dd4cdc8d549b8a826a5b4f525086b226ccdcf22e) **chore:** add nyc
+  - [`d0971dd`](https://github.com/groupon/shared-store/commit/d0971ddaf95552eed56a1969fb93654304073df9) **refactor:** replace lodash functions
+  - [`a178aaf`](https://github.com/groupon/shared-store/commit/a178aaf2ec9db436e7d3e072a629e3b46a7a428b) **style:** clean code
+  - [`948dc19`](https://github.com/groupon/shared-store/commit/948dc1933b6c7719c2b414c1d0524e6b4fb0bc02) **chore:** upgrade to rx 4.x
+  - [`e168b42`](https://github.com/groupon/shared-store/commit/e168b42b3670422de90f545a62139b687ec684c3) **fix:** update travis.yml
+  - [`49e4f31`](https://github.com/groupon/shared-store/commit/49e4f3194ed324d1af6bb7b9bbdb0eb2e7a4555b) **docs:** update readme
+
+
 ### 3.1.1
 
 * default `setActive()` to write cache files - **[@dbushong](https://github.com/dbushong)** [#40](https://github.com/groupon/shared-store/pull/40)
