@@ -1,3 +1,9 @@
+### 4.0.1 - 2020-04-30
+
+* chore: update package and remove unused bluebird pkg - **[@aaarichter](https://github.com/aaarichter)** [#42](https://github.com/groupon/shared-store/pull/42)
+  - [`36a7c5a`](https://github.com/groupon/shared-store/commit/36a7c5a93705db5f89cd4f32d21452f47acd7d39) **chore:** update package and remove unused bluebird pkg
+
+
 ### 4.0.0 - 2020-04-07
 
 #### Breaking Changes
