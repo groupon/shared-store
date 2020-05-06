@@ -1,3 +1,9 @@
+### 4.0.2 - 2020-05-06
+
+* fix: set internal vars ahead of time - **[@aaarichter](https://github.com/aaarichter)** [#43](https://github.com/groupon/shared-store/pull/43)
+  - [`5f7008d`](https://github.com/groupon/shared-store/commit/5f7008d214be98a2c64320973e7200beb74c863a) **fix:** set internal vars ahead of time
+
+
 ### 4.0.1 - 2020-04-30
 
 * chore: update package and remove unused bluebird pkg - **[@aaarichter](https://github.com/aaarichter)** [#42](https://github.com/groupon/shared-store/pull/42)
