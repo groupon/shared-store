@@ -33,16 +33,20 @@
     }
   },
   "dependencies": {
+    "@types/rx-lite": "^4.0.6",
+    "@types/rx-lite-aggregates": "^4.0.3",
     "cson-parser": "^4.0.4",
     "debug": "^4.1.1",
     "deep-freeze": "0.0.1",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.2",
     "mkdirp": "^1.0.4",
-    "rx": "^4.1.0"
+    "rx-lite": "^4.0.8",
+    "rx-lite-aggregates": "^4.0.8",
+    "rx-lite-extras": "^4.0.8"
   },
   "devDependencies": {
-    "assertive": "^5.0.0",
+    "assertive": "^5.0.1",
     "eslint": "^6.8.0",
     "eslint-config-groupon": "^9.0.0",
     "eslint-plugin-import": "^2.20.1",

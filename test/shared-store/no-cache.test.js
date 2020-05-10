@@ -8,7 +8,7 @@ const path = require('path');
 
 const assert = require('assertive');
 
-const { Observable } = require('rx');
+const { Observable } = require('rx-lite');
 
 const tmp = require('tmp');
 

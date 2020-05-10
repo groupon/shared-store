@@ -2,7 +2,7 @@
 
 const assert = require('assertive');
 
-const { Observable } = require('rx');
+const { Observable } = require('rx-lite');
 
 function checkError(observable, fn) {
   const OK = {};
