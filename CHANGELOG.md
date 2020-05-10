@@ -1,3 +1,9 @@
+### 4.0.3 - 2020-05-10
+
+* refactor: switch to rx-lite packages - **[@aaarichter](https://github.com/aaarichter)** [#44](https://github.com/groupon/shared-store/pull/44)
+  - [`c8dc636`](https://github.com/groupon/shared-store/commit/c8dc63691e09cc02f8a421571459d907e5acb984) **refactor:** switch to rx-lite packages
+
+
 ### 4.0.2 - 2020-05-06
 
 * fix: set internal vars ahead of time - **[@aaarichter](https://github.com/aaarichter)** [#43](https://github.com/groupon/shared-store/pull/43)
