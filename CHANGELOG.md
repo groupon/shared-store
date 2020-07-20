@@ -1,3 +1,9 @@
+### 4.0.4 - 2020-07-20
+
+* chore(deps): bump lodash from 4.17.15 to 4.17.19 - **[@dependabot[bot]](https://github.com/apps/dependabot)** [#45](https://github.com/groupon/shared-store/pull/45)
+  - [`c468f10`](https://github.com/groupon/shared-store/commit/c468f100a06c19652df78a2179820d039ddbc1bf) **chore:** bump lodash from 4.17.15 to 4.17.19 - see: [4](- [Commits](https://github.com/lodash/lodash/compare/4)
+
+
 ### 4.0.3 - 2020-05-10
 
 * refactor: switch to rx-lite packages - **[@aaarichter](https://github.com/aaarichter)** [#44](https://github.com/groupon/shared-store/pull/44)
