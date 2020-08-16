@@ -22,6 +22,7 @@
     "node": ">=10"
   },
   "mocha": {
+    "exit": true,
     "recursive": true
   },
   "nlm": {
