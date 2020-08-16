@@ -22,8 +22,7 @@
     "node": ">=10"
   },
   "mocha": {
-    "recursive": true,
-    "exit": true
+    "recursive": true
   },
   "nlm": {
     "license": {
@@ -33,8 +32,6 @@
     }
   },
   "dependencies": {
-    "@types/rx-lite": "^4.0.6",
-    "@types/rx-lite-aggregates": "^4.0.3",
     "cson-parser": "^4.0.5",
     "debug": "^4.1.1",
     "deep-freeze": "0.0.1",
