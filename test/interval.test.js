@@ -1,6 +1,6 @@
 'use strict';
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
@@ -16,39 +16,45 @@ function loadSuccess() {
 
 describe('onInterval', () => {
   it('is a function', () => {
-    assert.hasType(Function, onInterval);
+    assert.strictEqual(typeof onInterval, 'function');
   });
+
   describe('interval < 1s', () => {
     it('fails', () => {
       checkError(onInterval(999, loadSuccess), err => {
-        assert.equal(
+        assert.strictEqual(
+          err.message,
           `\
 Interval has to be at least 1s: 999ms\
-`,
-          err.message
+`
         );
       });
     });
   });
+
   describe('interval is falsey', () => {
     const verifyOne = observable =>
       observable
         .toArray()
         .toPromise()
         .then(values => {
-          assert.equal(1, values.length);
-          assert.equal(LOAD_SUCCESS, values[0]);
+          assert.strictEqual(values.length, 1);
+          assert.strictEqual(values[0], LOAD_SUCCESS);
         });
 
     it('returns one value only for interval = 0', () =>
       verifyOne(onInterval(0, loadSuccess)));
+
     it('returns one value for negative interval', () =>
       verifyOne(onInterval(-1, loadSuccess)));
+
     it('returns one value for interval = false', () =>
       verifyOne(onInterval(false, loadSuccess)));
+
     it('returns one value for interval = undefined', () =>
       verifyOne(onInterval(undefined, loadSuccess)));
   });
+
   describe('interval >= 1s', () => {
     function loadIncremental() {
       let current = 0;
@@ -61,15 +67,16 @@ Interval has to be at least 1s: 999ms\
         .take(1)
         .toPromise()
         .then(value => {
-          assert.equal(0, value);
-          assert.truthy(
+          assert.strictEqual(value, 0);
+          assert.ok(
+            Date.now() - start < 50,
             `\
 took <<< 1s\
-`,
-            Date.now() - start < 50
+`
           );
         });
     });
+
     it('loads one value per second', function () {
       this.timeout(2100);
       this.slow(2050);
@@ -79,13 +86,13 @@ took <<< 1s\
         .toArray()
         .toPromise()
         .then(values => {
-          assert.deepEqual([0, 1, 2], values); // 1st: immediate, 2nd: 1s, 3rd: 2s
+          assert.deepStrictEqual(values, [0, 1, 2]); // 1st: immediate, 2nd: 1s, 3rd: 2s
 
-          assert.truthy(
+          assert.ok(
+            Date.now() - start >= 2000,
             `\
 took >= 2s'\
-`,
-            Date.now() - start >= 2000
+`
           );
         });
     });

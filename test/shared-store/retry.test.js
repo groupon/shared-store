@@ -1,6 +1,6 @@
 'use strict';
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
@@ -10,6 +10,7 @@ const SharedStore = require('../../');
 
 describe('SharedStore (retry functionality)', () => {
   let tmpDir;
+
   before(done => {
     tmp.dir(
       {
@@ -24,6 +25,7 @@ describe('SharedStore (retry functionality)', () => {
 
   describe('reading from a loader with a single value', () => {
     let store = null;
+
     before(() => {
       store = new SharedStore({
         temp: tmpDir,
@@ -36,7 +38,7 @@ describe('SharedStore (retry functionality)', () => {
     it('init and retry will emit the same meta ', async () => {
       let metaCount = 0;
       store.on('meta', options => {
-        assert.equal('some-options', options);
+        assert.strictEqual(options, 'some-options');
         metaCount++;
       });
 
@@ -44,7 +46,7 @@ describe('SharedStore (retry functionality)', () => {
 
       store._retry();
 
-      assert.equal(2, metaCount);
+      assert.strictEqual(metaCount, 2);
     });
   });
 });

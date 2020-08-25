@@ -1,6 +1,6 @@
 'use strict';
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
@@ -51,11 +51,11 @@ describe('SharedStore (with data already in cache)', () => {
     beforeEach(() => delay(1000));
 
     it('should return cached data immediately in callback', () => {
-      assert.equal('some data', notSoCurrent);
+      assert.strictEqual(notSoCurrent, 'some data');
     });
 
     it('should return latest data in getCurrent', () => {
-      assert.equal('other data', store.getCurrent());
+      assert.strictEqual(store.getCurrent(), 'other data');
     });
   });
 
@@ -74,7 +74,7 @@ describe('SharedStore (with data already in cache)', () => {
       delay(1000)
         .then(() => store.init())
         .then(data => {
-          assert.equal('some data', data);
+          assert.strictEqual(data, 'some data');
         }));
   });
 
@@ -108,14 +108,14 @@ describe('SharedStore (with data already in cache)', () => {
 
     it('will throw an error first', done => {
       store.on('err', err => {
-        assert.equal('kaboom!', err.message);
+        assert.strictEqual(err.message, 'kaboom!');
         done();
       });
     });
 
     it('will keep on streaming after an error is thrown', () =>
       delay(1500).then(() => {
-        assert.equal('2nd value', store.getCurrent());
+        assert.strictEqual(store.getCurrent(), '2nd value');
       }));
   });
 });

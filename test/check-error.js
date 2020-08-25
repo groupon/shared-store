@@ -1,6 +1,6 @@
 'use strict';
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
@@ -13,7 +13,7 @@ function checkError(observable, fn) {
     })
     .toPromise()
     .then(value => {
-      assert.equal(OK, value);
+      assert.deepStrictEqual(value, OK);
     });
 }
 
