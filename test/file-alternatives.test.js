@@ -22,9 +22,9 @@ describe('fileAlternativesContent', () => {
   });
 
   describe('for no existing files', () => {
-    it('fails with no defaultValue', () => {
+    it('fails with no defaultValue', async () => {
       const filename = path.join(os.tmpdir(), 'missing.json');
-      checkError(
+      await checkError(
         fileAlternativesContent([filename], {
           watch: false,
         }),
@@ -95,8 +95,8 @@ describe('fileAlternativesContent', () => {
       );
     });
 
-    it('dies horribly', function () {
-      checkError(
+    it('dies horribly', async function () {
+      await checkError(
         fileAlternativesContent([this.filename1, this.filename2], {
           watch: false,
         }),

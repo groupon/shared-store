@@ -20,8 +20,9 @@ describe('onInterval', () => {
   });
 
   describe('interval < 1s', () => {
-    it('fails', () => {
-      checkError(onInterval(999, loadSuccess), err => {
+    it('fails', async () => {
+      const observable = onInterval(999, loadSuccess);
+      await checkError(observable, err => {
         assert.strictEqual(
           err.message,
           `\
@@ -61,40 +62,27 @@ Interval has to be at least 1s: 999ms\
       return () => Observable.just(current++);
     }
 
-    it('loads the first value immediately', () => {
+    it('loads the first value immediately', async () => {
       const start = Date.now();
-      return onInterval(1000, loadIncremental())
+      const value = await onInterval(1000, loadIncremental())
         .take(1)
-        .toPromise()
-        .then(value => {
-          assert.strictEqual(value, 0);
-          assert.ok(
-            Date.now() - start < 50,
-            `\
-took <<< 1s\
-`
-          );
-        });
+        .toPromise();
+
+      assert.strictEqual(value, 0);
+      assert.ok(Date.now() - start < 50, `took <<< 1s`);
     });
 
-    it('loads one value per second', function () {
+    it('loads one value per second', async function () {
       this.timeout(2100);
       this.slow(2050);
       const start = Date.now();
-      return onInterval(1000, loadIncremental())
+      const values = await onInterval(1000, loadIncremental())
         .take(3)
         .toArray()
-        .toPromise()
-        .then(values => {
-          assert.deepStrictEqual(values, [0, 1, 2]); // 1st: immediate, 2nd: 1s, 3rd: 2s
+        .toPromise();
 
-          assert.ok(
-            Date.now() - start >= 2000,
-            `\
-took >= 2s'\
-`
-          );
-        });
+      assert.deepStrictEqual(values, [0, 1, 2]); // 1st: immediate, 2nd: 1s, 3rd: 2s
+      assert.ok(Date.now() - start >= 2000, `took >= 2s`);
     });
   });
 });

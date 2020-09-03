@@ -44,6 +44,7 @@ describe('SharedStore (retry functionality)', () => {
 
       await store.init('some-options');
 
+      // eslint-disable-next-line no-underscore-dangle
       store._retry();
 
       assert.strictEqual(metaCount, 2);

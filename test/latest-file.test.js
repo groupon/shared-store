@@ -29,7 +29,6 @@ function dotJSON({ filename }) {
   return /\.json$/.test(filename);
 }
 
-// FIXME: this test suite doesn't run on its own. It relies on previous tests to run
 describe('latestFile', () => {
   it('is a function', () => {
     assert.strictEqual(typeof latestFile, 'function');
@@ -50,8 +49,8 @@ describe('latestFile', () => {
       });
     });
 
-    it('fails', function () {
-      checkError(this.resource, error => {
+    it('fails', async function () {
+      await checkError(this.resource, error => {
         assert.strictEqual(error.code, 'ENOENT');
       });
     });
@@ -70,8 +69,8 @@ describe('latestFile', () => {
         });
       });
 
-      it('fails', function () {
-        checkError(this.resource, error => {
+      it('fails', async function () {
+        await checkError(this.resource, error => {
           assert.strictEqual(error.code, 'ENOENT');
         });
       });

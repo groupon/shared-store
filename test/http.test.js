@@ -23,8 +23,8 @@ describe('httpResource', () => {
       });
     });
 
-    it('forwards the error', function () {
-      checkError(this.resource, error => {
+    it('forwards the error', async function () {
+      await checkError(this.resource, error => {
         assert.strictEqual(error.message, 'Fetch failed');
       });
     });

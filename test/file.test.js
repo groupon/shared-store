@@ -23,9 +23,9 @@ describe('fileContent', () => {
     assert.strictEqual(typeof fileContent, 'function');
   });
 
-  it('fails when the file does not exist', () => {
+  it('fails when the file does not exist', async () => {
     const filename = path.join(os.tmpdir(), 'missing.json');
-    checkError(
+    await checkError(
       fileContent(filename, {
         watch: false,
       }),
@@ -139,8 +139,8 @@ describe('fileContent', () => {
       );
     });
 
-    it('fails with a helpful error message', function () {
-      checkError(
+    it('fails with a helpful error message', async function () {
+      await checkError(
         fileContent(this.filename, {
           watch: false,
         }),
@@ -160,8 +160,8 @@ describe('fileContent', () => {
       return writeFile(this.filename, '{\n  "foo": 42\n  "bar": 13\n}\n');
     });
 
-    it('fails with a helpful error message', function () {
-      checkError(
+    it('fails with a helpful error message', async function () {
+      await checkError(
         fileContent(this.filename, {
           watch: false,
         }),

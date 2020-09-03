@@ -4,6 +4,12 @@ const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
+/**
+ *
+ * @param {Rx.Observable} observable
+ * @param {function} fn
+ * @returns {Rx.IPromise<void>}
+ */
 function checkError(observable, fn) {
   const OK = {};
   return observable
