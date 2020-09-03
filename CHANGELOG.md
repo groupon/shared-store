@@ -1,3 +1,14 @@
+### 4.0.5 - 2020-09-03
+
+* refactor: remove nodash functions & test refactor - **[@aaarichter](https://github.com/aaarichter)** [#47](https://github.com/groupon/shared-store/pull/47)
+  - [`2ac79e2`](https://github.com/groupon/shared-store/commit/2ac79e2acb1c15617c1e6f09a08a8608cc4dd7d1) ♻️ **chore:** update dependencies
+  - [`4ed2eb1`](https://github.com/groupon/shared-store/commit/4ed2eb14766c1d66fd3d1dc3c56a2416b7a512e4) ✅ **test:** use node assert instead of assertive
+  - [`2e868e3`](https://github.com/groupon/shared-store/commit/2e868e3bfb239859d6bbcd866e0c155566f59f9e) 💚 **ci:** add node 14 to travis
+  - [`d979d32`](https://github.com/groupon/shared-store/commit/d979d32198f93313d16475ad3317f424f656dcf8) ♻️ **chore:** update dependencies
+  - [`9891749`](https://github.com/groupon/shared-store/commit/9891749bfbc9395b0c17db2bf002577b668f10b6) 📦️ **refactor:** remove nodash functions
+  - [`779937e`](https://github.com/groupon/shared-store/commit/779937e8da8287bf9518db6c28aef322abf62687) ✅ **test:** fix test promise handling
+
+
 ### 4.0.4 - 2020-07-20
 
 * chore(deps): bump lodash from 4.17.15 to 4.17.19 - **[@dependabot[bot]](https://github.com/apps/dependabot)** [#45](https://github.com/groupon/shared-store/pull/45)
