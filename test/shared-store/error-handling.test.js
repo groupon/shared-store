@@ -1,6 +1,6 @@
 'use strict';
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
@@ -12,6 +12,7 @@ describe('SharedStore (error handling)', () => {
   describe('reading from a loader that throws an error immediately', () => {
     describe('with no cache', () => {
       let tmpDir = null;
+
       before(done => {
         tmp.dir(
           {
@@ -23,6 +24,7 @@ describe('SharedStore (error handling)', () => {
           }
         );
       });
+
       it('will return the error through callback', done => {
         let thrownError = false;
         const store = new SharedStore({
@@ -36,16 +38,19 @@ describe('SharedStore (error handling)', () => {
             thrownError = true;
           }),
         });
+
         store.init((err, data) => {
-          assert.hasType(undefined, data);
-          assert.hasType(undefined, store.getCurrent());
-          assert.equal('This throws!', err.message);
+          assert.strictEqual(data, undefined);
+          assert.strictEqual(store.getCurrent(), undefined);
+          assert.strictEqual(err.message, 'This throws!');
           done();
         });
       });
     });
+
     describe('with a cache', () => {
       let tmpDir = null;
+
       before(done => {
         tmp.dir(
           {
@@ -62,12 +67,14 @@ describe('SharedStore (error handling)', () => {
                 });
               },
             });
+
             store.init(storeErr => {
               done(storeErr);
             });
           }
         );
       });
+
       it('will return the cache through callback & getCurrent', done => {
         let thrownError = false;
         const store = new SharedStore({
@@ -81,17 +88,20 @@ describe('SharedStore (error handling)', () => {
             thrownError = true;
           }),
         });
+
         store.init((err, data) => {
-          assert.equal('tastic', data);
-          assert.equal('tastic', store.getCurrent());
-          assert.equal(null, err);
+          assert.strictEqual(data, 'tastic');
+          assert.strictEqual(store.getCurrent(), 'tastic');
+          assert.strictEqual(err, null);
           done();
         });
       });
     });
   });
+
   describe('reading from a loader that throws an error after a successful read', () => {
     let tmpDir = null;
+
     before(done => {
       tmp.dir(
         {
@@ -103,6 +113,7 @@ describe('SharedStore (error handling)', () => {
         }
       );
     });
+
     it('will return the error through event handler', done => {
       let thrownError = false;
       const store = new SharedStore({
@@ -121,12 +132,13 @@ describe('SharedStore (error handling)', () => {
           }, 500);
         }),
       });
+
       store.init((err, data) => {
-        assert.equal(null, err);
-        assert.deepEqual({}, data);
+        assert.strictEqual(err, null);
+        assert.deepStrictEqual(data, {});
       });
       store.on('err', err => {
-        assert.equal('¡Ay, caramba!', err.message);
+        assert.strictEqual(err.message, '¡Ay, caramba!');
         done();
       });
     });

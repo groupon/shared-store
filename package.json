@@ -33,9 +33,7 @@
     }
   },
   "dependencies": {
-    "@types/rx-lite": "^4.0.6",
-    "@types/rx-lite-aggregates": "^4.0.3",
-    "cson-parser": "^4.0.4",
+    "cson-parser": "^4.0.5",
     "debug": "^4.1.1",
     "deep-freeze": "0.0.1",
     "lodash.isequal": "^4.5.0",
@@ -46,19 +44,20 @@
     "rx-lite-extras": "^4.0.8"
   },
   "devDependencies": {
-    "assertive": "^5.0.1",
-    "eslint": "^6.8.0",
-    "eslint-config-groupon": "^9.0.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-mocha": "^6.3.0",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "mocha": "^7.1.2",
-    "nlm": "^4.2.0",
-    "nyc": "^15.0.1",
-    "prettier": "^2.0.5",
+    "@types/rx-lite": "^4.0.6",
+    "@types/rx-lite-aggregates": "^4.0.3",
+    "eslint": "^7.8.1",
+    "eslint-config-groupon": "^10.0.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "mocha": "^8.1.3",
+    "nlm": "^5.0.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.1",
     "rimraf": "^3.0.2",
-    "tmp": "^0.1.0"
+    "tmp": "^0.2.1"
   },
   "author": {
     "name": "Groupon",

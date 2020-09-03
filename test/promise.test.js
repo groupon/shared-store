@@ -1,6 +1,6 @@
 'use strict';
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
@@ -8,8 +8,9 @@ const { fromPromiseFunction } = require('../lib/promise');
 
 describe('fromPromiseFunction', () => {
   it('is a function', () => {
-    assert.hasType(Function, fromPromiseFunction);
+    assert.strictEqual(typeof fromPromiseFunction, 'function');
   });
+
   it('can convert back and forth', () => {
     const expected = {
       a: 'value',
@@ -17,17 +18,18 @@ describe('fromPromiseFunction', () => {
     return fromPromiseFunction(() => expected)
       .toPromise()
       .then(value => {
-        assert.deepEqual(expected, value);
+        assert.deepStrictEqual(value, expected);
       });
   });
+
   it('handles rejections', () =>
     fromPromiseFunction(() => Promise.reject(new Error('Bad')))
       .catch(err => {
-        assert.equal('Bad', err.message);
+        assert.strictEqual(err.message, 'Bad');
         return Observable.just('ok');
       })
       .toPromise()
       .then(ok => {
-        assert.equal('ok', ok);
+        assert.strictEqual(ok, 'ok');
       }));
 });

@@ -6,7 +6,7 @@ const os = require('os');
 
 const path = require('path');
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const CSON = require('cson-parser');
 
@@ -17,21 +17,24 @@ const fileContent = require('../lib/file');
 const checkError = require('./check-error');
 
 const writeFile = promisify(fs.writeFile);
+
 describe('fileContent', () => {
   it('is a function', () => {
-    assert.hasType(Function, fileContent);
+    assert.strictEqual(typeof fileContent, 'function');
   });
-  it('fails when the file does not exist', () => {
+
+  it('fails when the file does not exist', async () => {
     const filename = path.join(os.tmpdir(), 'missing.json');
-    checkError(
+    await checkError(
       fileContent(filename, {
         watch: false,
       }),
       error => {
-        assert.equal('ENOENT', error.code);
+        assert.strictEqual(error.code, 'ENOENT');
       }
     );
   });
+
   describe('a CSON file', () => {
     before(function () {
       this.filename = path.join(os.tmpdir(), 'some-file.cson');
@@ -43,16 +46,18 @@ describe('fileContent', () => {
         CSON.stringify(this.initialContent, null, 2)
       );
     });
+
     it('returns the parsed content', function () {
       return fileContent(this.filename, {
         watch: false,
       })
         .toPromise()
         .then(({ data }) => {
-          assert.deepEqual(this.initialContent, data);
+          assert.deepStrictEqual(data, this.initialContent);
         });
     });
   });
+
   describe('a JSON file', () => {
     before(function () {
       this.filename = path.join(os.tmpdir(), 'some-file.json');
@@ -61,6 +66,7 @@ describe('fileContent', () => {
       };
       return writeFile(this.filename, JSON.stringify(this.initialContent));
     });
+
     it('returns the parsed content', function () {
       return fileContent(this.filename, {
         watch: true,
@@ -68,9 +74,10 @@ describe('fileContent', () => {
         .take(1)
         .toPromise()
         .then(({ data }) => {
-          assert.deepEqual(this.initialContent, data);
+          assert.deepStrictEqual(data, this.initialContent);
         });
     });
+
     describe('after changing the file', () => {
       before(function () {
         this.content = fileContent(this.filename, {
@@ -95,17 +102,20 @@ describe('fileContent', () => {
         };
         return writeFile(this.filename, JSON.stringify(this.updated));
       });
+
       it('returns the updated content', function () {
         return this.changed.then(({ data }) => {
-          assert.deepEqual(this.updated, data);
+          assert.deepStrictEqual(data, this.updated);
         });
       });
     });
   });
+
   describe('when the surrounding dir does not exist', () => {
     before(function () {
       this.filename = path.join(os.tmpdir(), 'not-a-dir', 'some-file.cson');
     });
+
     it('does not fail, just ignores the watch', function () {
       return fileContent(this.filename, {
         watch: true,
@@ -114,10 +124,11 @@ describe('fileContent', () => {
         .take(2)
         .toPromise()
         .then(result => {
-          assert.equal(42, result);
+          assert.strictEqual(result, 42);
         });
     });
   });
+
   describe('a CSON file with syntax errors', () => {
     before(function () {
       this.filename = path.join(os.tmpdir(), 'some-file.cson'); // The content is missing a closing quote after Hello
@@ -127,34 +138,37 @@ describe('fileContent', () => {
         'x: 10\nfoo: 13\nbar: "Hello\nzapp: 42\n'
       );
     });
-    it('fails with a helpful error message', function () {
-      checkError(
+
+    it('fails with a helpful error message', async function () {
+      await checkError(
         fileContent(this.filename, {
           watch: false,
         }),
         error => {
-          assert.equal('SyntaxError', error.name);
-          assert.include('missing "', error.message);
-          assert.include(`in ${this.filename}:3`, error.message);
+          assert.strictEqual(error.name, 'SyntaxError');
+          assert.ok(error.message.includes('missing "'));
+          assert.ok(error.message.includes(`in ${this.filename}:3`));
         }
       );
     });
   });
+
   describe('a JSON file with syntax errors', () => {
     before(function () {
       this.filename = path.join(os.tmpdir(), 'some-file.json'); // The content is missing a comma after 42
 
       return writeFile(this.filename, '{\n  "foo": 42\n  "bar": 13\n}\n');
     });
-    it('fails with a helpful error message', function () {
-      checkError(
+
+    it('fails with a helpful error message', async function () {
+      await checkError(
         fileContent(this.filename, {
           watch: false,
         }),
         error => {
-          assert.equal('SyntaxError', error.name);
-          assert.include('Unexpected string', error.message);
-          assert.include(`in ${this.filename}`, error.message);
+          assert.strictEqual(error.name, 'SyntaxError');
+          assert.ok(error.message.includes('Unexpected string'));
+          assert.ok(error.message.includes(`in ${this.filename}`));
         }
       );
     });

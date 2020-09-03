@@ -4,7 +4,7 @@ const childProcess = require('child_process');
 
 const fs = require('fs');
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const tmp = require('tmp');
 
@@ -62,16 +62,18 @@ describe('Crash recovery', () => {
     );
     return writeFile(`${this.tmpDir}/${timestampName()}`, brokenCache);
   });
+
   it('crashes initially', function () {
     return execFile(childPath, [this.tmpDir]).then(unexpected, error => {
-      assert.include('Error: Expected crash', error.message);
-      assert.include('Cache reset successful', error.message);
+      assert.ok(error.message.includes('Error: Expected crash'));
+      assert.ok(error.message.includes('Cache reset successful'));
     });
   });
+
   it('succeeds on retry', function () {
     return execFile(childPath, [this.tmpDir]).then(({ stdout, stderr }) => {
-      assert.equal('', stderr);
-      assert.equal('ok\n', stdout);
+      assert.strictEqual(stderr, '');
+      assert.strictEqual(stdout, 'ok\n');
     });
   });
 });
@@ -94,6 +96,7 @@ describe('Crash avoidance', () => {
     const badJSON = '{';
     return writeFile(`${this.tmpDir}/${timestampName()}`, badJSON);
   });
+
   it('starts up anyway', function () {
     const env = {
       DEBUG: 'shared-store:cache',
@@ -103,7 +106,7 @@ describe('Crash avoidance', () => {
     return execFile(childPath, [this.tmpDir], {
       env,
     }).then(({ stdout }) => {
-      assert.equal('ok\n', stdout);
+      assert.strictEqual(stdout, 'ok\n');
     });
   });
 });

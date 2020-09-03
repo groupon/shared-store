@@ -6,7 +6,7 @@ const os = require('os');
 
 const path = require('path');
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
@@ -35,6 +35,7 @@ function delay(ms) {
 
 describe('SharedStore', () => {
   let tmpDir;
+
   before(done => {
     tmp.dir(
       {
@@ -65,7 +66,8 @@ describe('SharedStore', () => {
         temp: tmpDir,
         active: true,
         loader: baseConfig => {
-          assert.deepEqual(BASE_CONFIG, baseConfig);
+          assert.deepStrictEqual(baseConfig, BASE_CONFIG);
+
           return Observable.combineLatest(
             Observable.just({
               data: {
@@ -88,21 +90,22 @@ describe('SharedStore', () => {
     });
 
     it('returns the initial data', () => {
-      assert.deepEqual(INITIAL_DATA, store.getCurrent());
+      assert.deepStrictEqual(store.getCurrent(), INITIAL_DATA);
     });
 
     it('passes the initial data into the callback', () => {
-      assert.deepEqual(INITIAL_DATA, initCallbackData);
+      assert.deepStrictEqual(initCallbackData, INITIAL_DATA);
     });
 
     it('writes a cache file', () => {
       const cacheFiles = fs.readdirSync(tmpDir);
 
-      assert.equal(1, cacheFiles.length);
+      assert.strictEqual(cacheFiles.length, 1);
     });
 
     describe('a passive store', () => {
       let passiveStore;
+
       before(async () => {
         passiveStore = new SharedStore({
           temp: tmpDir,
@@ -121,14 +124,14 @@ describe('SharedStore', () => {
       });
 
       it('gets the same data', () => {
-        assert.deepEqual(INITIAL_DATA, passiveStore.getCurrent());
+        assert.deepStrictEqual(passiveStore.getCurrent(), INITIAL_DATA);
       });
 
       it('can switch to active', async () => {
         passiveStore.setActive();
         await delay(300);
 
-        assert.deepEqual({ static: 'data' }, passiveStore.getCurrent());
+        assert.deepStrictEqual(passiveStore.getCurrent(), { static: 'data' });
       });
     });
 
@@ -142,7 +145,7 @@ describe('SharedStore', () => {
       before(() => delay(300));
 
       it('has the updated data', () => {
-        assert.deepEqual(CHANGED_DATA, store.getCurrent());
+        assert.deepStrictEqual(store.getCurrent(), CHANGED_DATA);
       });
     });
   });

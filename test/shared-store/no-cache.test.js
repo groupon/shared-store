@@ -6,7 +6,7 @@ const os = require('os');
 
 const path = require('path');
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { Observable } = require('rx-lite');
 
@@ -17,6 +17,7 @@ const SharedStore = require('../../');
 const BASE_CONFIG = {
   opt: 'value',
 };
+
 describe('With cache disabled', () => {
   before(function (done) {
     tmp.dir(
@@ -41,12 +42,14 @@ describe('With cache disabled', () => {
         done
       );
     });
+
     before(function (done) {
       this.store = new SharedStore({
         temp: this.tmpDir,
         active: true,
         loader: baseConfig => {
-          assert.deepEqual(BASE_CONFIG, baseConfig);
+          assert.deepStrictEqual(baseConfig, BASE_CONFIG);
+
           return Observable.just({
             data: {
               static: 'data',
@@ -68,17 +71,17 @@ describe('With cache disabled', () => {
         }
       );
     });
+
     it('returns the initial data', function () {
-      assert.deepEqual(
-        {
-          static: 'data',
-        },
-        this.store.getCurrent()
-      );
+      assert.deepStrictEqual(this.store.getCurrent(), {
+        static: 'data',
+      });
     });
+
     it('writes no cache file', function () {
       const cacheFiles = fs.readdirSync(this.tmpDir);
-      assert.equal(0, cacheFiles.length);
+
+      assert.strictEqual(cacheFiles.length, 0);
     });
   });
 });

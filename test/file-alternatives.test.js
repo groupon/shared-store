@@ -6,7 +6,7 @@ const os = require('os');
 
 const path = require('path');
 
-const assert = require('assertive');
+const assert = require('assert');
 
 const { promisify } = require('util');
 
@@ -15,22 +15,25 @@ const fileAlternativesContent = require('../lib/file-alternatives');
 const checkError = require('./check-error');
 
 const writeFile = promisify(fs.writeFile);
+
 describe('fileAlternativesContent', () => {
   it('is a function', () => {
-    assert.hasType(Function, fileAlternativesContent);
+    assert.strictEqual(typeof fileAlternativesContent, 'function');
   });
+
   describe('for no existing files', () => {
-    it('fails with no defaultValue', () => {
+    it('fails with no defaultValue', async () => {
       const filename = path.join(os.tmpdir(), 'missing.json');
-      checkError(
+      await checkError(
         fileAlternativesContent([filename], {
           watch: false,
         }),
         error => {
-          assert.include('none of', error.message);
+          assert.ok(error.message.includes('none of'));
         }
       );
     });
+
     it('returns a defaultValue', () => {
       const defaultValue = {};
       return fileAlternativesContent([], {
@@ -40,10 +43,11 @@ describe('fileAlternativesContent', () => {
         .take(1)
         .toPromise()
         .then(data => {
-          assert.equal(defaultValue, data);
+          assert.strictEqual(data, defaultValue);
         });
     });
   });
+
   describe('for a single existing file', () => {
     before(function () {
       this.filename = path.join(os.tmpdir(), 'some-file.json');
@@ -52,6 +56,7 @@ describe('fileAlternativesContent', () => {
       };
       return writeFile(this.filename, JSON.stringify(this.initialContent));
     });
+
     it('accepts a string', function () {
       return fileAlternativesContent(this.filename, {
         watch: false,
@@ -59,9 +64,10 @@ describe('fileAlternativesContent', () => {
         .take(1)
         .toPromise()
         .then(({ data }) => {
-          assert.deepEqual(this.initialContent, data);
+          assert.deepStrictEqual(data, this.initialContent);
         });
     });
+
     it('accepts an array with only one existing file', function () {
       const bogus = path.join(os.tmpdir(), 'missing.json');
       return fileAlternativesContent([bogus, this.filename], {
@@ -70,10 +76,11 @@ describe('fileAlternativesContent', () => {
         .take(1)
         .toPromise()
         .then(({ data }) => {
-          assert.deepEqual(this.initialContent, data);
+          assert.deepStrictEqual(data, this.initialContent);
         });
     });
   });
+
   describe('for multiple existing files', () => {
     before(function () {
       this.filename1 = path.join(os.tmpdir(), 'some-file.json');
@@ -87,13 +94,14 @@ describe('fileAlternativesContent', () => {
         })
       );
     });
-    it('dies horribly', function () {
-      checkError(
+
+    it('dies horribly', async function () {
+      await checkError(
         fileAlternativesContent([this.filename1, this.filename2], {
           watch: false,
         }),
         error => {
-          assert.include('multiple', error.message);
+          assert.ok(error.message.includes('multiple'));
         }
       );
     });
