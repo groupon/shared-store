@@ -1,3 +1,10 @@
+### v4.0.6 (2021-02-17)
+
+#### 🔼 Dependencies
+
+* [#48](https://github.com/groupon/shared-store/pull/48) chore(deps): bump ini from 1.3.5 to 1.3.8 ([@dependabot[bot]](https://github.com/apps/dependabot)) 
+
+
 ### 4.0.5 - 2020-09-03
 
 * refactor: remove nodash functions & test refactor - **[@aaarichter](https://github.com/aaarichter)** [#47](https://github.com/groupon/shared-store/pull/47)
