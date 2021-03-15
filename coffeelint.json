@@ -1,7 +1,0 @@
-{
-  "extends": "coffeelint-config-groupon",
-  "use_strict": {
-    "module": "coffeelint-use-strict",
-    "level": "ignore"
-  }
-}

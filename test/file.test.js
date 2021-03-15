@@ -56,6 +56,32 @@ describe('fileContent', () => {
           assert.deepStrictEqual(data, this.initialContent);
         });
     });
+
+    it("doesn't throw on an empty file", async () => {
+      this.filename = path.join(os.tmpdir(), 'some-file.cson');
+      await writeFile(this.filename, '');
+
+      await fileContent(this.filename, {
+        watch: false,
+      })
+        .toPromise()
+        .then(({ data }) => {
+          assert.deepStrictEqual(data, {});
+        });
+    });
+
+    it("doesn't throw on a file with newline chars", async () => {
+      this.filename = path.join(os.tmpdir(), 'some-file.cson');
+      await writeFile(this.filename, '\n\n'); // when folks delete newline chars might remain
+
+      await fileContent(this.filename, {
+        watch: false,
+      })
+        .toPromise()
+        .then(({ data }) => {
+          assert.deepStrictEqual(data, {});
+        });
+    });
   });
 
   describe('a JSON file', () => {
@@ -108,6 +134,32 @@ describe('fileContent', () => {
           assert.deepStrictEqual(data, this.updated);
         });
       });
+    });
+
+    it("doesn't throw on an empty file", async () => {
+      this.filename = path.join(os.tmpdir(), 'some-file.json');
+      await writeFile(this.filename, '');
+
+      await fileContent(this.filename, {
+        watch: false,
+      })
+        .toPromise()
+        .then(({ data }) => {
+          assert.deepStrictEqual(data, {});
+        });
+    });
+
+    it("doesn't throw on a file with newline chars", async () => {
+      this.filename = path.join(os.tmpdir(), 'some-file.json');
+      await writeFile(this.filename, '\n\n'); // when folks delete newline chars might remain
+
+      await fileContent(this.filename, {
+        watch: false,
+      })
+        .toPromise()
+        .then(({ data }) => {
+          assert.deepStrictEqual(data, {});
+        });
     });
   });
 
