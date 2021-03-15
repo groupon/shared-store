@@ -1,3 +1,10 @@
+### v4.0.7 (2021-03-15)
+
+#### 🐛 Bug Fixes
+
+* [#49](https://github.com/groupon/shared-store/pull/49) fix: avoid error on empty cson/json ([@aaarichter](https://github.com/aaarichter)) 
+
+
 ### v4.0.6 (2021-02-17)
 
 #### 🔼 Dependencies
