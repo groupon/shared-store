@@ -1,3 +1,10 @@
+### v4.0.8 (2021-03-26)
+
+#### 🏡 Internal
+
+* [#50](https://github.com/groupon/shared-store/pull/50) chore: switch to main & update packages ([@aaarichter](https://github.com/aaarichter)) 
+
+
 ### v4.0.7 (2021-03-15)
 
 #### 🐛 Bug Fixes
