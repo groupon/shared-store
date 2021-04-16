@@ -10,6 +10,8 @@ const assert = require('assert');
 
 const CSON = require('cson-parser');
 
+const yaml = require('js-yaml');
+
 const { promisify } = require('util');
 
 const fileContent = require('../lib/file');
@@ -35,132 +37,93 @@ describe('fileContent', () => {
     );
   });
 
-  describe('a CSON file', () => {
-    before(function () {
-      this.filename = path.join(os.tmpdir(), 'some-file.cson');
-      this.initialContent = {
-        initial: 'state',
-      };
-      return writeFile(
-        this.filename,
-        CSON.stringify(this.initialContent, null, 2)
-      );
-    });
+  describe('supported file types', () => {
+    const testCases = [
+      ['.cson', CSON.stringify, [null, 2]],
+      ['.json', JSON.stringify, [null, 2]],
+      ['.yml', yaml.dump],
+    ];
 
-    it('returns the parsed content', function () {
-      return fileContent(this.filename, {
-        watch: false,
-      })
-        .toPromise()
-        .then(({ data }) => {
-          assert.deepStrictEqual(data, this.initialContent);
+    for (const testCase of testCases) {
+      const [fileType, writer, writerArgs = []] = testCase;
+
+      describe(fileType, () => {
+        let filename;
+        let initialContent;
+        beforeEach(() => {
+          filename = path.join(os.tmpdir(), `some-file${fileType}`);
+          initialContent = {
+            initial: 'state',
+          };
+          return writeFile(filename, writer(initialContent, ...writerArgs));
         });
-    });
 
-    it("doesn't throw on an empty file", async () => {
-      this.filename = path.join(os.tmpdir(), 'some-file.cson');
-      await writeFile(this.filename, '');
+        it('returns the parsed content', async () => {
+          const { data } = await fileContent(filename, {
+            watch: false,
+          }).toPromise();
 
-      await fileContent(this.filename, {
-        watch: false,
-      })
-        .toPromise()
-        .then(({ data }) => {
+          assert.deepStrictEqual(data, initialContent);
+        });
+
+        it("doesn't throw on an empty file", async () => {
+          filename = path.join(os.tmpdir(), `some-file${fileType}`);
+          await writeFile(filename, '');
+
+          const { data } = await fileContent(filename, {
+            watch: false,
+          }).toPromise();
+
           assert.deepStrictEqual(data, {});
         });
-    });
 
-    it("doesn't throw on a file with newline chars", async () => {
-      this.filename = path.join(os.tmpdir(), 'some-file.cson');
-      await writeFile(this.filename, '\n\n'); // when folks delete newline chars might remain
+        it("doesn't throw on a file with newline chars", async () => {
+          filename = path.join(os.tmpdir(), `some-file${fileType}`);
+          await writeFile(filename, '\n\n'); // when folks delete newline chars might remain
 
-      await fileContent(this.filename, {
-        watch: false,
-      })
-        .toPromise()
-        .then(({ data }) => {
+          const { data } = await fileContent(filename, {
+            watch: false,
+          }).toPromise();
+
           assert.deepStrictEqual(data, {});
         });
-    });
-  });
 
-  describe('a JSON file', () => {
-    before(function () {
-      this.filename = path.join(os.tmpdir(), 'some-file.json');
-      this.initialContent = {
-        initial: 'state',
-      };
-      return writeFile(this.filename, JSON.stringify(this.initialContent));
-    });
+        describe('after changing the file', () => {
+          let content;
+          let connection;
+          let changed;
+          let updated;
 
-    it('returns the parsed content', function () {
-      return fileContent(this.filename, {
-        watch: true,
-      })
-        .take(1)
-        .toPromise()
-        .then(({ data }) => {
-          assert.deepStrictEqual(data, this.initialContent);
-        });
-    });
+          beforeEach(() => {
+            content = fileContent(filename, {
+              watch: true,
+            }).publish();
+            connection = content.connect();
+            return content.take(1).toPromise();
+          }); // Skip initial
 
-    describe('after changing the file', () => {
-      before(function () {
-        this.content = fileContent(this.filename, {
-          watch: true,
-        }).publish();
-        this._connection = this.content.connect();
-        return this.content.take(1).toPromise();
-      }); // Skip initial
+          beforeEach(() => {
+            changed = content.take(1).toPromise();
+            updated = {
+              updated: 'content',
+            };
+            return writeFile(filename, writer(updated, ...writerArgs));
+          });
 
-      after(function () {
-        if (this._connection) {
-          this._connection.dispose();
-        }
-      });
-      before(function () {
-        this.changed = this.content.take(1).toPromise();
-      }); // don't block
+          afterEach(() => {
+            if (connection) {
+              connection.dispose();
+            }
+          });
 
-      before(function () {
-        this.updated = {
-          updated: 'content',
-        };
-        return writeFile(this.filename, JSON.stringify(this.updated));
-      });
+          it('returns the updated content', async () => {
+            const { data } = await changed;
 
-      it('returns the updated content', function () {
-        return this.changed.then(({ data }) => {
-          assert.deepStrictEqual(data, this.updated);
+            assert.deepStrictEqual(data, updated);
+          });
         });
       });
-    });
-
-    it("doesn't throw on an empty file", async () => {
-      this.filename = path.join(os.tmpdir(), 'some-file.json');
-      await writeFile(this.filename, '');
-
-      await fileContent(this.filename, {
-        watch: false,
-      })
-        .toPromise()
-        .then(({ data }) => {
-          assert.deepStrictEqual(data, {});
-        });
-    });
-
-    it("doesn't throw on a file with newline chars", async () => {
-      this.filename = path.join(os.tmpdir(), 'some-file.json');
-      await writeFile(this.filename, '\n\n'); // when folks delete newline chars might remain
-
-      await fileContent(this.filename, {
-        watch: false,
-      })
-        .toPromise()
-        .then(({ data }) => {
-          assert.deepStrictEqual(data, {});
-        });
-    });
+    }
   });
 
   describe('when the surrounding dir does not exist', () => {
