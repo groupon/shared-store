@@ -3,7 +3,7 @@
 ![nlm-version](https://img.shields.io/badge/version-4.0.8-blue?logo=version&logoColor=white)
 # shared-store
 
-This module allows you load data from a JSON/CSON file, URL or custom loader
+This module allows you load data from a `.json`, `.cson` or `.yml` file, URL or custom loader
 function and share that data easily amongst multiple node.js worker processes.
 When the data changes, the master process will load the latest changes, which
 are immediately made available for all workers to consume.
@@ -117,7 +117,7 @@ const fileContent = require('shared-store/file');
 ```
 
 An observable representing the content of a file.
-By default parses the content based on the extension.
+By default, parses the content based on the extension.
 
 Support for the following extensions is built in:
 
@@ -125,6 +125,8 @@ Support for the following extensions is built in:
   Parsed using `JSON.parse`
 * `.cson`:
   Parsed using [`CSON.parse`](https://github.com/groupon/cson-parser)
+* `.yml`:
+  Parsed using [`yaml.load`](https://github.com/nodeca/js-yaml)
 
 ##### Options
 
