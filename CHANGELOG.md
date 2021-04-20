@@ -1,3 +1,10 @@
+### v4.1.0 (2021-04-20)
+
+#### 🚀 New Features
+
+* [#51](https://github.com/groupon/shared-store/pull/51) feat: support yaml ([@aaarichter](https://github.com/aaarichter)) 
+
+
 ### v4.0.8 (2021-03-26)
 
 #### 🏡 Internal
