@@ -42,6 +42,7 @@ describe('fileContent', () => {
       ['.cson', CSON.stringify, [null, 2]],
       ['.json', JSON.stringify, [null, 2]],
       ['.yml', yaml.dump],
+      ['.yaml', yaml.dump],
     ];
 
     for (const testCase of testCases) {
