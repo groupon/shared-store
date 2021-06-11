@@ -125,7 +125,7 @@ Support for the following extensions is built in:
   Parsed using `JSON.parse`
 * `.cson`:
   Parsed using [`CSON.parse`](https://github.com/groupon/cson-parser)
-* `.yml`:
+* `.yml`/`.yaml`:
   Parsed using [`yaml.load`](https://github.com/nodeca/js-yaml)
 
 ##### Options
