@@ -1,3 +1,14 @@
+### v4.1.1 (2021-06-11)
+<a id="v4.1.1"></a>
+#### 🐛 Bug Fixes
+
+* [#54](https://github.com/groupon/shared-store/pull/54) fix(yml): add .yaml extension ([@aaarichter](https://github.com/aaarichter))
+
+#### 🏡 Internal
+
+* [#53](https://github.com/groupon/shared-store/pull/53) ci(actions): add GitHub actions ([@aaarichter](https://github.com/aaarichter))
+
+
 ### v4.1.0 (2021-04-20)
 
 #### 🚀 New Features
