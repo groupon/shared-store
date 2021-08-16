@@ -1,3 +1,10 @@
+### v4.1.2 (2021-08-16)
+<a id="v4.1.2"></a>
+#### 🔼 Dependencies
+
+* [#55](https://github.com/groupon/shared-store/pull/55) chore(deps): bump path-parse from 1.0.6 to 1.0.7 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+
 ### v4.1.1 (2021-06-11)
 <a id="v4.1.1"></a>
 #### 🐛 Bug Fixes
